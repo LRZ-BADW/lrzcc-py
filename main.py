@@ -30,21 +30,29 @@ def setup_parsers():
     '''
     # main parser
     global parser
-    parser = argparse.ArgumentParser(description=DESCRIPTION)
-    parser.add_argument('-u', '--url', type=str,
-                        help=f'URL of the budgeting API (default: {API_URL})',
+    parser = argparse.ArgumentParser(
+            description=DESCRIPTION,
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+            )
+    parser.add_argument('-u',
+                        '--url',
+                        type=str,
+                        help=f'URL of the budgeting API to talk to',
                         default=API_URL)
-    parser.add_argument('-t', '--token', type=str,
-                        help='''Keystone token for authentication, if not
+    parser.add_argument('-t',
+                        '--token',
+                        type=str,
+                        help='''Keystone token for authentication. If not
                         specified, environment variable OS_TOKEN is expected'''
                         )
     parser.add_argument('-d',
-            '--debug',
-            help = "Be more verbose and print out helpful information to " \
-                    "figure out why thinks (do not) work.",
-            action = "store_true",
-            required = False,
-            default = False,
+                        '--debug',
+                        help = """Be more verbose and print out helpful
+                                information to figure out why things
+                                (do not) work.""",
+                        action = "store_true",
+                        required = False,
+                        default = False,
             )
 
     # add main arguments here
