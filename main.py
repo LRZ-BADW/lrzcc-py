@@ -38,6 +38,14 @@ def setup_parsers():
                         help='''Keystone token for authentication, if not
                         specified, environment variable OS_TOKEN is expected'''
                         )
+    parser.add_argument('-d',
+            '--debug',
+            help = "Be more verbose and print out helpful information to " \
+                    "figure out why thinks (do not) work.",
+            action = "store_true",
+            required = False,
+            default = False,
+            )
 
     # add main arguments here
     global subparsers
@@ -86,6 +94,10 @@ def parse_args():
 
 def execute_command():
     '''execute the respective function for the given command'''
+
+    if args.debug:
+        print(args)
+
     function_name = args.command.replace('-', '_')
     if args.sub_command:
         function_name += f'_{args.sub_command}'
@@ -94,15 +106,10 @@ def execute_command():
             function = getattr(module, function_name)
     function(args)
 
-def debug_info():
-    '''Print out some debug information'''
-    print(args)
-
 def main():
     '''the main method'''
     setup_parsers()
     parse_args()
-    debug_info()
     execute_command()
 
 if __name__ == "__main__":
