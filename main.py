@@ -69,7 +69,11 @@ def parse_args():
         print(f'{sys.argv[0]}: error: argument missing.', file=sys.stderr)
         exit(1)
 
-    args.token = args.token if args.token else os.getenv('OS_TOKEN').replace('\r', '')
+    # Read token either from the command line (preferred if given) or from
+    # the environment variable OS_TOKEN.
+    # NOTE: we need to rstrip() the string to get rid of \r and \n
+    args.token = args.token if args.token else os.getenv('OS_TOKEN')
+    args.token = args.token.rstrip()
     if not args.token:
         print(f'{sys.argv[0]}: error: no Openstack token given. ' +
               'Use -t/--token or the environment variable OS_TOKEN.',
@@ -90,11 +94,15 @@ def execute_command():
             function = getattr(module, function_name)
     function(args)
 
+def debug_info():
+    '''Print out some debug information'''
+    print(args)
 
 def main():
     '''the main method'''
     setup_parsers()
     parse_args()
+    debug_info()
     execute_command()
 
 if __name__ == "__main__":
