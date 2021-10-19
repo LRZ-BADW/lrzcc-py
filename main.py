@@ -89,8 +89,9 @@ def parse_args():
     # the environment variable OS_TOKEN.
     # NOTE: we need to rstrip() the string to get rid of \r and \n
     args.token = args.token if args.token else os.getenv('OS_TOKEN')
-    args.token = args.token.rstrip()
-    if not args.token:
+    if args.token:
+        args.token = args.token.rstrip()
+    else:
         print(f'{sys.argv[0]}: error: no Openstack token given. ' +
               'Use -t/--token or the environment variable OS_TOKEN.',
               file=sys.stderr)
