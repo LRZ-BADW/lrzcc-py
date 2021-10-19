@@ -36,14 +36,15 @@ def setup_parsers():
             )
     parser.add_argument('-u',
                         '--url',
-                        type=str,
-                        help=f'URL of the budgeting API to talk to',
-                        default=API_URL)
+                        type = str,
+                        help = "URL of the budgeting API to talk to",
+                        default=API_URL,
+                        )
     parser.add_argument('-t',
                         '--token',
-                        type=str,
-                        help='''Keystone token for authentication. If not
-                        specified, environment variable OS_TOKEN is expected'''
+                        type = str,
+                        help = """Keystone token for authentication. If not
+                        specified, environment variable OS_TOKEN is expected""",
                         )
     parser.add_argument('-d',
                         '--debug',
@@ -87,14 +88,15 @@ def parse_args():
 
     # Read token either from the command line (preferred if given) or from
     # the environment variable OS_TOKEN.
-    # NOTE: we need to rstrip() the string to get rid of \r and \n
     args.token = args.token if args.token else os.getenv('OS_TOKEN')
     if args.token:
+        # The token string may contain \r and \n
+        # We need to rstrip() the string to get rid of these characters
         args.token = args.token.rstrip()
     else:
-        print(f'{sys.argv[0]}: error: no Openstack token given. ' +
-              'Use -t/--token or the environment variable OS_TOKEN.',
-              file=sys.stderr)
+        print(f"{sys.argv[0]}: error: no Openstack token given. " \
+                "Use -t/--token or the environment variable OS_TOKEN.",
+                file=sys.stderr)
         exit(1)
 
     # do module argument checks

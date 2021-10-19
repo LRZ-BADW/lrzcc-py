@@ -13,19 +13,34 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
     # flavor price parser
     flavor_price_parser: ArgumentParser = main_subparsers.add_parser(
-        'flavor-price', help='flavor price commands')
+            "flavor-price",
+            help = "flavor price commands",
+            )
     parsers['flavor-price'] = flavor_price_parser
-    flavor_price_subparsers: _SubParsersAction = flavor_price_parser.add_subparsers(
-        help='sub-commands', dest='sub_command')
+    flavor_price_subparsers: _SubParsersAction = \
+            flavor_price_parser.add_subparsers(
+                    help="sub-commands",
+                    dest="sub_command",
+                    )
 
     # flavor price list parser
-    flavor_price_list_parser: ArgumentParser = flavor_price_subparsers.add_parser(
-        'list', help='list flavor prices')
+    flavor_price_list_parser: ArgumentParser = \
+            flavor_price_subparsers.add_parser(
+                    "list",
+                    help = "List flavor prices",
+                    )
 
     # flavor price show parser
-    flavor_price_show_parser: ArgumentParser = flavor_price_subparsers.add_parser(
-        'show', help='show a flavor price')
-    flavor_price_show_parser.add_argument('id', type=int, help='id of the flavor price')
+    flavor_price_show_parser: ArgumentParser = \
+            flavor_price_subparsers.add_parser(
+                    "show",
+                    help = "show a flavor price",
+                    )
+    flavor_price_show_parser.add_argument(
+            "id",
+            type = int,
+            help = 'ID of the flavor price',
+            )
 
     # flavor price create parser
     # flavor price delete parser
