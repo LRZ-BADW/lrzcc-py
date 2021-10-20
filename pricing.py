@@ -1,9 +1,10 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
-import sys
+# import sys
 
 
 cmds_with_sub_cmds = ['flavor-price']
+
 
 # TODO we should probably use type annotations everywhere, here I'm just using
 # it, so that my editor can give me suggestions

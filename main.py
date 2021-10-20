@@ -3,7 +3,7 @@
 
 import argparse
 import argcomplete
-import logging
+# import logging
 import os
 import sys
 import pricing
@@ -54,7 +54,7 @@ def setup_parsers():
                         action = "store_true",
                         required = False,
                         default = False,
-            )
+                        )
 
     # add main arguments here
     global subparsers
@@ -65,7 +65,7 @@ def setup_parsers():
     global parsers
     parsers |= pricing.setup_parsers(subparsers)
 
-    # get list of commnands with sub-commands
+    # get list of commands with sub-commands
     global cmds_with_sub_cmds
     cmds_with_sub_cmds.extend(pricing.cmds_with_sub_cmds)
 
@@ -117,11 +117,13 @@ def execute_command():
             function = getattr(module, function_name)
     function(args)
 
+
 def main():
     '''the main method'''
     setup_parsers()
     parse_args()
     execute_command()
+
 
 if __name__ == "__main__":
     main()
