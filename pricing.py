@@ -77,7 +77,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     return parsers
 
 
-def parse_args(args: dict):
+def parse_args(args: Namespace):
     '''parse the command line arguments'''
     # TODO
     pass
@@ -93,7 +93,7 @@ def flavor_price_list(args: Namespace):
 
 
 # TODO why dict here instead of Namespace
-def flavor_price_show(args: dict):
+def flavor_price_show(args: Namespace):
     '''show the price with a given id'''
     # TODO
     pass

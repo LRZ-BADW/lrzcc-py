@@ -38,7 +38,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     return parsers
 
 
-def parse_args(args: dict):
+def parse_args(args: Namespace):
     '''parse the command line arguments'''
     # TODO
     pass
@@ -50,7 +50,7 @@ def hello_user(args: Namespace):
     pass
 
 
-def hello_admin(args: dict):
+def hello_admin(args: Namespace):
     '''hello for admins'''
     # TODO
     pass

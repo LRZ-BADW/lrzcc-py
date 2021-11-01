@@ -74,7 +74,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     return parsers
 
 
-def parse_args(args: dict):
+def parse_args(args: Namespace):
     '''parse the command line arguments'''
     # TODO
     pass
@@ -89,7 +89,7 @@ def server_action_list(args: Namespace):
     print(resp.json())
 
 
-def server_action_show(args: dict):
+def server_action_show(args: Namespace):
     '''show the server action with a given id'''
     # TODO
     pass
