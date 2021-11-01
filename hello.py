@@ -23,14 +23,14 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
     # hello user parser
     hello_user_parser: ArgumentParser = \
-            server_action_subparsers.add_parser(
+            hello_subparsers.add_parser(
                     "user",
                     help = "Hello as normal user",
                     )
 
     # hello admin parser
     hello_admin_parser: ArgumentParser = \
-            server_action_subparsers.add_parser(
+            hello_subparsers.add_parser(
                     "admin",
                     help = "Hello as admin user",
                     )
