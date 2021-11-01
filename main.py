@@ -6,6 +6,7 @@ import argcomplete
 # import logging
 import os
 import sys
+import hello
 import pricing
 import accounting
 
