@@ -88,7 +88,7 @@ def setup_parsers():
                                  ],
                         help="output table format (default: plain)",
                         required=False,
-                        default="grid",
+                        default="github",
                         )
 
     # add main arguments here
