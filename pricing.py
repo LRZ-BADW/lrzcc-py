@@ -92,11 +92,25 @@ def flavor_price_list(args: Namespace):
     print(resp.json())
 
 
-# TODO why dict here instead of Namespace
 def flavor_price_show(args: Namespace):
-    '''show the price with a given id'''
+    '''show the flavor price with the given id'''
     # TODO
     pass
 
 
-# TODO other methods
+def flavor_price_create(args: Namespace):
+    '''create a flavor price'''
+    # TODO
+    pass
+
+
+def flavor_price_modify(args: Namespace):
+    '''modify the flavor price with the given id'''
+    # TODO
+    pass
+
+
+def flavor_price_delete(args: Namespace):
+    '''delete the flavor price with the given id'''
+    # TODO
+    pass
