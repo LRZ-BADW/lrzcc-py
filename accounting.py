@@ -83,8 +83,8 @@ def parse_args(args: Namespace):
 def server_action_list(args: Namespace):
     '''list server actions'''
     url = f'{args.url}/accounting/serveractions'
-    headers={'Content-Type': 'application/json',
-             'X-Auth-Token': args.token}
+    headers = {'Content-Type': 'application/json',
+               'X-Auth-Token': args.token}
     resp = requests.get(url, headers=headers)
     print(resp.json())
 
