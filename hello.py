@@ -57,8 +57,7 @@ def hello_user(args: Namespace):
     headers = {'Content-Type': 'application/json',
                'X-Auth-Token': args.token}
     resp = requests.get(url, headers=headers)
-    output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
-    print(output)
+    common.print_response(resp, args)
 
 
 def hello_admin(args: Namespace):
@@ -67,5 +66,4 @@ def hello_admin(args: Namespace):
     headers = {'Content-Type': 'application/json',
                'X-Auth-Token': args.token}
     resp = requests.get(url, headers=headers)
-    output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
-    print(output)
+    common.print_response(resp, args)
