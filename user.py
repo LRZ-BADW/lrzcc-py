@@ -137,10 +137,10 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    common.do_nothing(user_list_parser)
-    common.do_nothing(user_create_parser)
-    common.do_nothing(project_list_parser)
-    common.do_nothing(project_create_parser)
+    do_nothing(user_list_parser)
+    do_nothing(user_create_parser)
+    do_nothing(project_list_parser)
+    do_nothing(project_create_parser)
 
     return parsers
 
