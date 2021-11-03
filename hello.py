@@ -46,11 +46,19 @@ def parse_args(args: Namespace):
 
 def hello_user(args: Namespace):
     '''hello for users'''
-    # TODO
-    pass
+    url = f'{args.url}/hello'
+    headers = {'Content-Type': 'application/json',
+               'X-Auth-Token': args.token}
+    resp = requests.get(url, headers=headers)
+    output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
+    print(output)
 
 
 def hello_admin(args: Namespace):
     '''hello for admins'''
-    # TODO
-    pass
+    url = f'{args.url}/hello/admin'
+    headers = {'Content-Type': 'application/json',
+               'X-Auth-Token': args.token}
+    resp = requests.get(url, headers=headers)
+    output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
+    print(output)
