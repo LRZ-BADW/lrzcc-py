@@ -53,17 +53,11 @@ def parse_args(args: Namespace):
 
 def hello_user(args: Namespace):
     '''hello for users'''
-    url = f'{args.url}/hello'
-    headers = {'Content-Type': 'application/json',
-               'X-Auth-Token': args.token}
-    resp = requests.get(url, headers=headers)
+    resp = common.api_request('get', '/hello', None, args)
     common.print_response(resp, args)
 
 
 def hello_admin(args: Namespace):
     '''hello for admins'''
-    url = f'{args.url}/hello/admin'
-    headers = {'Content-Type': 'application/json',
-               'X-Auth-Token': args.token}
-    resp = requests.get(url, headers=headers)
+    resp = common.api_request('get', '/hello/admin', None, args)
     common.print_response(resp, args)
