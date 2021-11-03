@@ -7,7 +7,10 @@ def do_nothing(variable):
 
 
 def print_response(resp, args):
-    output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
+    if type(resp.json()) == list:
+        output = tabulate.tabulate(resp.json(), tablefmt=args.format)
+    else:
+        output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
     print(output)
 
 
