@@ -2,7 +2,7 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
 import tabulate
 
-import misc
+import common
 
 
 cmds_with_sub_cmds = ['hello']
@@ -39,8 +39,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
                 )
 
     # just to avoid unused variable warnings
-    misc.do_nothing(hello_user_parser)
-    misc.do_nothing(hello_admin_parser)
+    common.do_nothing(hello_user_parser)
+    common.do_nothing(hello_admin_parser)
 
     return parsers
 

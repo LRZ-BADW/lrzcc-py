@@ -2,7 +2,7 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
 # import sys
 
-import misc
+import common
 
 
 cmds_with_sub_cmds = ['flavor-price']
@@ -77,8 +77,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    misc.do_nothing(flavor_price_list_parser)
-    misc.do_nothing(flavor_price_create_parser)
+    common.do_nothing(flavor_price_list_parser)
+    common.do_nothing(flavor_price_create_parser)
 
     return parsers
 

@@ -1,7 +1,7 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
 
-import misc
+import common
 
 
 cmds_with_sub_cmds = ['server-action']
@@ -74,8 +74,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    misc.do_nothing(server_action_list_parser)
-    misc.do_nothing(server_action_create_parser)
+    common.do_nothing(server_action_list_parser)
+    common.do_nothing(server_action_create_parser)
 
     return parsers
 

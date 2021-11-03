@@ -2,7 +2,7 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
 # import sys
 
-import misc
+import common
 
 
 cmds_with_sub_cmds = ['user', 'project']
@@ -139,10 +139,10 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    misc.do_nothing(user_list_parser)
-    misc.do_nothing(user_create_parser)
-    misc.do_nothing(project_list_parser)
-    misc.do_nothing(project_create_parser)
+    common.do_nothing(user_list_parser)
+    common.do_nothing(user_create_parser)
+    common.do_nothing(project_list_parser)
+    common.do_nothing(project_create_parser)
 
     return parsers
 
