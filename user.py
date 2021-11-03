@@ -1,8 +1,5 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-import requests
-# import sys
 
-import common
 from common import do_nothing, print_response, api_request
 
 
