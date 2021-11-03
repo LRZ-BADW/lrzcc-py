@@ -2,12 +2,10 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 import requests
 # import sys
 
+import misc
+
 
 cmds_with_sub_cmds = ['user', 'project']
-
-
-def do_nothing(variable):
-    pass
 
 
 # TODO we should probably use type annotations everywhere, here I'm just using
@@ -141,10 +139,10 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    do_nothing(user_list_parser)
-    do_nothing(user_create_parser)
-    do_nothing(project_list_parser)
-    do_nothing(project_create_parser)
+    misc.do_nothing(user_list_parser)
+    misc.do_nothing(user_create_parser)
+    misc.do_nothing(project_list_parser)
+    misc.do_nothing(project_create_parser)
 
     return parsers
 
