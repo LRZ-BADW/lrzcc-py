@@ -6,6 +6,7 @@ import argcomplete
 # import logging
 import os
 import sys
+import user
 import hello
 import pricing
 import accounting
@@ -96,12 +97,14 @@ def setup_parsers():
 
     # module parsers
     global parsers
+    parsers |= user.setup_parsers(subparsers)
     parsers |= hello.setup_parsers(subparsers)
     parsers |= pricing.setup_parsers(subparsers)
     parsers |= accounting.setup_parsers(subparsers)
 
     # get list of commands with sub-commands
     global cmds_with_sub_cmds
+    cmds_with_sub_cmds.extend(user.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(hello.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(pricing.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(accounting.cmds_with_sub_cmds)
@@ -137,6 +140,7 @@ def parse_args():
         exit(1)
 
     # do module argument checks
+    user.parse_args(args)
     hello.parse_args(args)
     pricing.parse_args(args)
     accounting.parse_args(args)
@@ -151,7 +155,7 @@ def execute_command():
     function_name = args.command.replace('-', '_')
     if args.sub_command:
         function_name += f'_{args.sub_command}'
-    for module in [hello, pricing, accounting]:
+    for module in [user, hello, pricing, accounting]:
         if hasattr(module, function_name):
             function = getattr(module, function_name)
     function(args)
