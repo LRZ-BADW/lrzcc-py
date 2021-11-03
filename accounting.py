@@ -1,7 +1,6 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-import requests
 
-import common
+from common import do_nothing, print_response, api_request
 
 
 cmds_with_sub_cmds = ['server-action']
@@ -74,8 +73,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    common.do_nothing(server_action_list_parser)
-    common.do_nothing(server_action_create_parser)
+    do_nothing(server_action_list_parser)
+    do_nothing(server_action_create_parser)
 
     return parsers
 
@@ -88,17 +87,15 @@ def parse_args(args: Namespace):
 
 def server_action_list(args: Namespace):
     '''list server actions'''
-    url = f'{args.url}/accounting/serveractions'
-    headers = {'Content-Type': 'application/json',
-               'X-Auth-Token': args.token}
-    resp = requests.get(url, headers=headers)
-    print(resp.json())
+    resp = api_request('get', '/accountint/serveractions', None, args)
+    print_response(resp, args)
 
 
 def server_action_show(args: Namespace):
     '''show the server action with a given id'''
-    # TODO
-    pass
+    resp = api_request('get', f'/accounting/serveractions/{args.id}', None,
+                       args)
+    print_response(resp, args)
 
 
 def server_action_create(args: Namespace):
