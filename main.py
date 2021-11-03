@@ -39,55 +39,56 @@ def setup_parsers():
             )
     parser.add_argument('-u',
                         '--url',
-                        type = str,
-                        help = "URL of the budgeting API to talk to",
+                        type=str,
+                        help="URL of the budgeting API to talk to",
                         default=API_URL,
                         )
     parser.add_argument('-t',
                         '--token',
-                        type = str,
-                        help = """Keystone token for authentication. If not
-                        specified, environment variable OS_TOKEN is expected""",
+                        type=str,
+                        help="""Keystone token for authentication. If not
+                        specified, environment variable OS_TOKEN is
+                        expected""",
                         )
     parser.add_argument('-d',
                         '--debug',
-                        help = """Be more verbose and print out helpful
+                        help="""Be more verbose and print out helpful
                                 information to figure out why things
                                 (do not) work.""",
-                        action = "store_true",
-                        required = False,
-                        default = False,
+                        action="store_true",
+                        required=False,
+                        default=False,
                         )
     parser.add_argument('-f',
                         '--format',
                         type=str,
-                        choices = ["plain",
-                                   "simple",
-                                   "github",
-                                   "grid",
-                                   "fancy_grid",
-                                   "pipe",
-                                   "orgtbl",
-                                   "jira",
-                                   "presto",
-                                   "pretty",
-                                   "psql",
-                                   "rst",
-                                   "mediawiki",
-                                   "moinmoin",
-                                   "youtrack",
-                                   "html",
-                                   "unsafehtml",
-                                   "latex",
-                                   "latex_raw",
-                                   "latex_booktabs",
-                                   "latex_longtable",
-                                   "textile",
-                                   "tsv",
-                                   ],
-                        help = "output table format (default: plain)",
-                        required = False,
-                        default = "grid",
+                        choices=["plain",
+                                 "simple",
+                                 "github",
+                                 "grid",
+                                 "fancy_grid",
+                                 "pipe",
+                                 "orgtbl",
+                                 "jira",
+                                 "presto",
+                                 "pretty",
+                                 "psql",
+                                 "rst",
+                                 "mediawiki",
+                                 "moinmoin",
+                                 "youtrack",
+                                 "html",
+                                 "unsafehtml",
+                                 "latex",
+                                 "latex_raw",
+                                 "latex_booktabs",
+                                 "latex_longtable",
+                                 "textile",
+                                 "tsv",
+                                 ],
+                        help="output table format (default: plain)",
+                        required=False,
+                        default="grid",
                         )
 
     # add main arguments here
@@ -134,9 +135,9 @@ def parse_args():
         # We need to rstrip() the string to get rid of these characters
         args.token = args.token.rstrip()
     else:
-        print(f"{sys.argv[0]}: error: no Openstack token given. " \
-                "Use -t/--token or the environment variable OS_TOKEN.",
-                file=sys.stderr)
+        print(f"{sys.argv[0]}: error: no Openstack token given. "
+              "Use -t/--token or the environment variable OS_TOKEN.",
+              file=sys.stderr)
         exit(1)
 
     # do module argument checks
