@@ -155,14 +155,14 @@ def parse_args(args: Namespace):
 
 def user_list(args: Namespace):
     '''list users'''
-    # TODO
-    pass
+    resp = api_request('get', '/user/users', None, args)
+    print_response(resp, args)
 
 
 def user_show(args: Namespace):
     '''show the user with the given id'''
-    # TODO
-    pass
+    resp = api_request('get', f'/user/users/{args.id}', None, args)
+    print_response(resp, args)
 
 
 def user_create(args: Namespace):
@@ -185,14 +185,14 @@ def user_delete(args: Namespace):
 
 def project_list(args: Namespace):
     '''list projects'''
-    # TODO
-    pass
+    resp = api_request('get', '/user/projects', None, args)
+    print_response(resp, args)
 
 
 def project_show(args: Namespace):
     '''show the project with the given id'''
-    # TODO
-    pass
+    resp = api_request('get', f'/user/projects/{args.id}', None, args)
+    print_response(resp, args)
 
 
 def project_create(args: Namespace):
