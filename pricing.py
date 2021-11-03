@@ -1,9 +1,6 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-import requests
-# import sys
 
-import common
-
+from common import do_nothing, print_response, api_request
 
 cmds_with_sub_cmds = ['flavor-price']
 
@@ -77,8 +74,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    common.do_nothing(flavor_price_list_parser)
-    common.do_nothing(flavor_price_create_parser)
+    do_nothing(flavor_price_list_parser)
+    do_nothing(flavor_price_create_parser)
 
     return parsers
 
@@ -91,17 +88,14 @@ def parse_args(args: Namespace):
 
 def flavor_price_list(args: Namespace):
     '''list flavor prices'''
-    url = f'{args.url}/pricing/flavorprices'
-    headers = {'Content-Type': 'application/json',
-               'X-Auth-Token': args.token}
-    resp = requests.get(url, headers=headers)
-    print(resp.json())
+    resp = api_request('get', '/pricing/flavorprices', None, args)
+    print_response(resp, args)
 
 
 def flavor_price_show(args: Namespace):
     '''show the flavor price with the given id'''
-    # TODO
-    pass
+    resp = api_request('get', f'/pricing/flavorprices/{args.id}', None, args)
+    print_response(resp, args)
 
 
 def flavor_price_create(args: Namespace):
