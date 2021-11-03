@@ -95,4 +95,19 @@ def server_action_show(args: Namespace):
     pass
 
 
-# TODO other methods
+def server_action_create(args: Namespace):
+    '''create a server action'''
+    # TODO
+    pass
+
+
+def server_action_modify(args: Namespace):
+    '''modify the server action with the given id'''
+    # TODO
+    pass
+
+
+def server_action_delete(args: Namespace):
+    '''delete the server action with the given id'''
+    # TODO
+    pass
