@@ -61,6 +61,37 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "create",
             help="Create a user",
             )
+    user_create_parser.add_argument(
+        "name",
+        type=str,
+        help="Name of the user",
+    )
+    user_create_parser.add_argument(
+        "-r",
+        "--role",
+        type=str,
+        choices=["user", "masteruser"],
+        default="user",
+        help="Role of the user within the project (default: user)",
+    )
+    user_create_parser.add_argument(
+        "-p",
+        "--project",
+        type=int,
+        help="Project ID",
+    )
+    user_create_parser.add_argument(
+        "-s",
+        "--staff",
+        action="store_true",
+        help="When the user is admin",
+    )
+    user_create_parser.add_argument(
+        "-i",
+        "--inactive",
+        action="store_true",
+        help="When the user is inactive",
+    )
 
     # user delete parser
     user_delete_parser: ArgumentParser = \
@@ -111,6 +142,19 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "create",
             help="Create a project",
             )
+    project_create_parser.add_argument(
+        "name",
+        type=str,
+        help='name of the project',
+    )
+    project_create_parser.add_argument(
+        "-u",
+        "--user-class",
+        type=int,
+        choices=[1,2,3,4,5,6],
+        default=1,
+        help="User class of the project",
+    )
 
     # project delete parser
     project_delete_parser: ArgumentParser = \
@@ -165,8 +209,15 @@ def user_show(args: Namespace):
 
 def user_create(args: Namespace):
     '''create a user'''
-    # TODO
-    pass
+    data = {
+        "name": args.name,
+        "role": args.role,
+        "project": args.project,
+        "is_staff": args.staff,
+        "is_active": not args.inactive,
+    }
+    resp = api_request('post', '/user/users', data, args)
+    print_response(resp, args)
 
 
 def user_modify(args: Namespace):
@@ -195,8 +246,12 @@ def project_show(args: Namespace):
 
 def project_create(args: Namespace):
     '''create a project'''
-    # TODO
-    pass
+    data = {
+        "name": args.name,
+        "user_class": args.user_class,
+    }
+    resp = api_request('post', '/user/projects', data, args)
+    print_response(resp, args)
 
 
 def project_modify(args: Namespace):
