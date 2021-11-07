@@ -263,5 +263,5 @@ def project_modify(args: Namespace):
 
 def project_delete(args: Namespace):
     '''delete the project with the given id'''
-    # TODO
-    pass
+    resp = api_request('delete', f'/user/projects/{args.id}', None, args)
+    print_response(resp, args)
