@@ -22,5 +22,6 @@ def api_request(method, path, data, args):
     url = f'{args.url}{path}'
     headers = {'Content-Type': 'application/json',
                'X-Auth-Token': args.token}
-    resp = requests.request(method, url, headers=headers, data=data)
+    resp = requests.request(method, url, headers=headers,
+                            data=json.dumps(data))
     return resp
