@@ -80,12 +80,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Role of the user within the project (default: user)",
     )
     user_create_parser.add_argument(
-        "-p",
-        "--project",
-        type=int,
-        help="Project ID",
-    )
-    user_create_parser.add_argument(
         "-s",
         "--staff",
         action="store_true",
