@@ -11,6 +11,8 @@ def do_nothing(variable):
 
 def print_response(resp, args):
     '''print an API response'''
+    if not resp.content:
+        return
     if type(resp.json()) == list:
         output = tabulate.tabulate(resp.json(), tablefmt=args.format)
     else:
