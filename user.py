@@ -67,6 +67,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Name of the user",
     )
     user_create_parser.add_argument(
+        "project",
+        type=int,
+        help="Project ID",
+    )
+    user_create_parser.add_argument(
         "-r",
         "--role",
         type=str,
