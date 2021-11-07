@@ -228,8 +228,8 @@ def user_modify(args: Namespace):
 
 def user_delete(args: Namespace):
     '''delete the user with the given id'''
-    # TODO
-    pass
+    resp = api_request('delete', f'/user/users/{args.id}', None, args)
+    print_response(resp, args)
 
 
 def project_list(args: Namespace):
