@@ -249,8 +249,9 @@ def project_create(args: Namespace):
     data = {
         "name": args.name,
         "user_class": args.user_class,
+        "users": [],
     }
-    resp = api_request('post', '/user/projects', data, args)
+    resp = api_request('post', '/user/projects/', data, args)
     print_response(resp, args)
 
 
