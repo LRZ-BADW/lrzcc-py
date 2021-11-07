@@ -211,12 +211,12 @@ def user_create(args: Namespace):
     '''create a user'''
     data = {
         "name": args.name,
-        "role": args.role,
         "project": args.project,
+        "role": 1 if args.role == 'user' else 2,
         "is_staff": args.staff,
         "is_active": not args.inactive,
     }
-    resp = api_request('post', '/user/users', data, args)
+    resp = api_request('post', '/user/users/', data, args)
     print_response(resp, args)
 
 
