@@ -151,7 +151,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-u",
         "--user-class",
         type=int,
-        choices=[1,2,3,4,5,6],
+        choices=[1, 2, 3, 4, 5, 6],
         default=1,
         help="User class of the project",
     )
