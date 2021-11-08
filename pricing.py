@@ -53,6 +53,21 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "flavor",
         type=str,
         help="Flavor name",
+        choices=[
+            'tiny',
+            'lrz.small',
+            'lrz.medium',
+            'lrz.large',
+            'lrz.xlarge',
+            'lrz.2xlarge',
+            'lrz.4xlarge',
+            'nvidia-v100.1',
+            'nvidia-v100.2',
+            'lrz.huge',
+            'lrz.xhuge',
+            'lrz.2xhuge',
+            'lrz.4xhuge',
+        ]
     )
     flavor_price_create_parser.add_argument(
         "userclass",
