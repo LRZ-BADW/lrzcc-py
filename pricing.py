@@ -86,9 +86,10 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-s",
         "--start-time",
         type=valid_datetime,
-        help="Datetime at which this price starts in ISO-8601 format "
+        help="Datetime at which this price starts in ISO-8601 format, "
+             "so for example 2021-11-09Z12:30:00T "
              "(default: now)",
-        default=datetime.now().isoformat(),
+        default=datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
 
     # flavor price delete parser
