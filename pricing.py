@@ -48,6 +48,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "create",
             help="Create a flavor price",
             )
+    flavor_price_create_parser.add_argument(
+        "flavor",
+        type=str,
+        help="Flavor name",
+    )
+    flavor_price_create_parser.add_argument(
+        "userclass",
+        type=int,
+        choices=[1, 2, 3, 4, 5, 6],
+        help="User class",
+    )
+    flavor_price_create_parser.add_argument(
+        "-p",
+        "--price",
+        type=float,
+        help="Price of flavor (default: 0.0)",
+        default=0.0,
+    )
+    flavor_price_create_parser.add_argument(
+        "-s",
+        "--start-time",
+        type=valid_datetime,
+        help="Datetime at which this price starts in ISO-8601 format "
+             "(default: now)",
+        default=datetime.now().isoformat(),
+    )
 
     # flavor price delete parser
     flavor_price_delete_parser: ArgumentParser = \
