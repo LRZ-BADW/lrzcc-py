@@ -1,6 +1,8 @@
 import tabulate
 import requests
 import json
+import datetime
+from argparse import ArgumentError
 
 
 def do_nothing(variable):
@@ -28,3 +30,11 @@ def api_request(method, path, data, args):
     resp = requests.request(method, url, headers=headers,
                             data=json.dumps(data))
     return resp
+
+
+def valid_datetime(string):
+    try:
+        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        msg = f"Not a valid datetime: {string}"
+        raise ArgumentError(msg)
