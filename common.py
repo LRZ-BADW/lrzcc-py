@@ -1,7 +1,7 @@
 import tabulate
 import requests
 import json
-import datetime
+from datetime import datetime
 from argparse import ArgumentError
 
 
