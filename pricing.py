@@ -143,8 +143,14 @@ def flavor_price_show(args: Namespace):
 
 def flavor_price_create(args: Namespace):
     '''create a flavor price'''
-    # TODO
-    pass
+    data = {
+        "flavor": args.flavor,
+        "user_class": args.user_class,
+        "unit_price": args.price,
+        "start_time": args.start_time,
+    }
+    resp = api_request('post', '/pricing/flavorprices/', data, args)
+    print_response(resp, args)
 
 
 def flavor_price_modify(args: Namespace):
