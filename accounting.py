@@ -290,5 +290,6 @@ def server_action_modify(args: Namespace):
 
 def server_action_delete(args: Namespace):
     '''delete the server action with the given id'''
-    # TODO
-    pass
+    resp = api_request('delete', f'/accounting/serveractions/{args.id}', None,
+                       args)
+    print_response(resp, args)
