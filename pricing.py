@@ -148,5 +148,6 @@ def flavor_price_modify(args: Namespace):
 
 def flavor_price_delete(args: Namespace):
     '''delete the flavor price with the given id'''
-    # TODO
-    pass
+    resp = api_request('delete', f'/pricing/flavorprices/{args.id}', None,
+                       args)
+    print_response(resp, args)
