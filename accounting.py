@@ -47,6 +47,158 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "create",
             help="Create a server action",
             )
+    server_action_create_parser.add_argument(
+        "acc_db_id",
+        type=int,
+        required=True,
+        help="ID of the corresponding row in the accounting table",
+    )
+    server_action_create_parser.add_argument(
+        "action_id",
+        type=int,
+        required=True,
+        help="ID of the action",
+    )
+    server_action_create_parser.add_argument(
+        "deleted",
+        type=int,
+        required=True,
+        help="1 when instance action was deleted, 0 otherwise",
+    )
+    server_action_create_parser.add_argument(
+        "created_at",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the action was created",
+    )
+    server_action_create_parser.add_argument(
+        "updated_at",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the action was last updated",
+    )
+    server_action_create_parser.add_argument(
+        "deleted_at",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the action was last deleted",
+    )
+    server_action_create_parser.add_argument(
+        "create_triggered_at",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the create trigger was invoked",
+    )
+    server_action_create_parser.add_argument(
+        "instance_id",
+        # TODO maybe validate UUIDs too
+        type=str,
+        required=True,
+        help="UUID of the instance",
+    )
+    server_action_create_parser.add_argument(
+        "instance_name",
+        type=str,
+        required=True,
+        help="name of the instance",
+    )
+    server_action_create_parser.add_argument(
+        "instance_state",
+        type=str,
+        required=True,
+        help="state of the instance",
+    )
+    server_action_create_parser.add_argument(
+        "project_id",
+        type=str,
+        required=True,
+        help="ID of the OpenStack project the instance belongs to",
+    )
+    server_action_create_parser.add_argument(
+        "project_name",
+        type=str,
+        required=True,
+        help="name of the OpenStack project the instance belongs to",
+    )
+    server_action_create_parser.add_argument(
+        "domain_id",
+        type=str,
+        required=True,
+        help="ID of the OpenStack domain the instance belongs to",
+    )
+    server_action_create_parser.add_argument(
+        "name",
+        type=str,
+        required=True,
+        help="name of the OpenStack domain the instance belongs to",
+    )
+    server_action_create_parser.add_argument(
+        "flavor",
+        # TODO use valid_flavor() once that's created
+        type=str,
+        required=True,
+        help="name of the flavor the instance, matches either flavor_new or "
+             "flavor_old",
+    )
+    server_action_create_parser.add_argument(
+        "flavor_new",
+        # TODO use valid_flavor() once that's created
+        type=str,
+        required=True,
+        help="name of the flavor the instance had after the action",
+    )
+    server_action_create_parser.add_argument(
+        "flavor_old",
+        # TODO use valid_flavor() once that's created
+        type=str,
+        required=True,
+        help="name of the flavor the instance had before the action",
+    )
+    server_action_create_parser.add_argument(
+        "action",
+        # TODO should be restricted to the specific actions available
+        type=str,
+        required=True,
+        help="the action done to the instance",
+    )
+    server_action_create_parser.add_argument(
+        "request_id",
+        type=str,
+        required=True,
+        help="ID of the request that issued the action",
+    )
+    server_action_create_parser.add_argument(
+        "request_project_id",
+        type=str,
+        required=True,
+        help="ID of the OpenStack project that invoked the request that "
+             "issued this action",
+    )
+    server_action_create_parser.add_argument(
+        "request_user_id",
+        type=str,
+        required=True,
+        help="ID of the OpenStack user that invoked the request that "
+             "issued this action",
+    )
+    server_action_create_parser.add_argument(
+        "start_time",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the action started",
+    )
+    server_action_create_parser.add_argument(
+        "finish_time",
+        type=valid_datetime,
+        required=True,
+        help="datetime when the action was finished",
+    )
+    server_action_create_parser.add_argument(
+        "message",
+        type=str,
+        required=True,
+        help="optional message on the action",
+    )
 
     # server action delete parser
     server_action_delete_parser: ArgumentParser = \
