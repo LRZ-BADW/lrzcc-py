@@ -54,6 +54,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="Flavor name",
         choices=[
+            # TODO move this to common and create a valid_flavor() function
+            # that can be used as type
             'tiny',
             'lrz.small',
             'lrz.medium',
