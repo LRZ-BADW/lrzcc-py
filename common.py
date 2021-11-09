@@ -38,3 +38,25 @@ def valid_datetime(string):
     except ValueError:
         msg = f"Not a valid datetime: {string}"
         raise ArgumentError(msg)
+
+
+def valid_flavor(string):
+    flavors = [
+        'tiny',
+        'lrz.small',
+        'lrz.medium',
+        'lrz.large',
+        'lrz.xlarge',
+        'lrz.2xlarge',
+        'lrz.4xlarge',
+        'nvidia-v100.1',
+        'nvidia-v100.2',
+        'lrz.huge',
+        'lrz.xhuge',
+        'lrz.2xhuge',
+        'lrz.4xhuge',
+    ]
+    if string not in flavors:
+        return string
+    msg = f"Not a valid flavor: {string}. Valid choices are: {flavors}"
+    raise ArgumentError(msg)

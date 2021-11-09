@@ -1,7 +1,9 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 from datetime import datetime
 
-from common import do_nothing, print_response, api_request, valid_datetime
+from common import (do_nothing, print_response, api_request, valid_datetime,
+                    valid_flavor)
+
 
 cmds_with_sub_cmds = ['flavor-price']
 
@@ -51,25 +53,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             )
     flavor_price_create_parser.add_argument(
         "flavor",
-        type=str,
+        type=valid_flavor,
         help="Flavor name",
-        choices=[
-            # TODO move this to common and create a valid_flavor() function
-            # that can be used as type
-            'tiny',
-            'lrz.small',
-            'lrz.medium',
-            'lrz.large',
-            'lrz.xlarge',
-            'lrz.2xlarge',
-            'lrz.4xlarge',
-            'nvidia-v100.1',
-            'nvidia-v100.2',
-            'lrz.huge',
-            'lrz.xhuge',
-            'lrz.2xhuge',
-            'lrz.4xhuge',
-        ]
     )
     flavor_price_create_parser.add_argument(
         "userclass",
