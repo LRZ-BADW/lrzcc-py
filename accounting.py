@@ -252,8 +252,34 @@ def server_action_show(args: Namespace):
 
 def server_action_create(args: Namespace):
     '''create a server action'''
-    # TODO
-    pass
+    data = {
+        "acc_db_id": args.acc_db_id,
+        "action_id": args.action_id,
+        "deleted": args.deleted,
+        "created_at": args.created_at,
+        "updated_at": args.updated_at,
+        "deleted_at": args.deleted_at,
+        "create_triggered_at": args.create_triggered_at,
+        "instance_id": args.instance_id,
+        "instance_name": args.instance_name,
+        "instance_state": args.instance_state,
+        "project_id": args.project_id,
+        "project_name": args.project_name,
+        "domain_id": args.domain_id,
+        "domain_name": args.domain_name,
+        "flavor": args.flavor,
+        "flavor_new": args.flavor_new,
+        "flavor_old": args.flavor_old,
+        "action": args.action,
+        "request_id": args.request_id,
+        "request_project_id": args.request_project_id,
+        "request_user_id": args.request_user_id,
+        "start_time": args.start_time,
+        "finish_time": args.finish_time,
+        "message": args.message,
+    }
+    resp = api_request('post', '/accounting/serveractions/', data, args)
+    print_response(resp, args)
 
 
 def server_action_modify(args: Namespace):
