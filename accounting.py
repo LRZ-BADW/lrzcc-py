@@ -127,7 +127,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="ID of the OpenStack domain the instance belongs to",
     )
     server_action_create_parser.add_argument(
-        "name",
+        "domain_name",
         type=str,
         required=True,
         help="name of the OpenStack domain the instance belongs to",
