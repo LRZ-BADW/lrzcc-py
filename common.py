@@ -56,7 +56,7 @@ def valid_flavor(string):
         'lrz.2xhuge',
         'lrz.4xhuge',
     ]
-    if string not in flavors:
-        return string
+    if string in flavors:
+        return flavors.index(string) + 1
     msg = f"Not a valid flavor: {string}. Valid choices are: {flavors}"
     raise ArgumentError(msg)
