@@ -99,11 +99,11 @@ def setup_parsers():
 
     # module parsers
     global parsers
-    parsers |= user.setup_parsers(subparsers)
-    parsers |= hello.setup_parsers(subparsers)
-    parsers |= pricing.setup_parsers(subparsers)
-    parsers |= accounting.setup_parsers(subparsers)
-    parsers |= quota.setup_parsers(subparsers)
+    parsers.update(user.setup_parsers(subparsers))
+    parsers.update(hello.setup_parsers(subparsers))
+    parsers.update(pricing.setup_parsers(subparsers))
+    parsers.update(accounting.setup_parsers(subparsers))
+    parsers.update(quota.setup_parsers(subparsers))
 
     # get list of commands with sub-commands
     global cmds_with_sub_cmds
