@@ -11,6 +11,7 @@ import hello
 import pricing
 import accounting
 import quota
+import resources
 
 THISMODULE = sys.modules[__name__]
 DESCRIPTION = 'client program for the LRZ Compute Cloud budgeting system'
@@ -104,6 +105,7 @@ def setup_parsers():
     parsers.update(pricing.setup_parsers(subparsers))
     parsers.update(accounting.setup_parsers(subparsers))
     parsers.update(quota.setup_parsers(subparsers))
+    parsers.update(resources.setup_parsers(subparsers))
 
     # get list of commands with sub-commands
     global cmds_with_sub_cmds
@@ -112,6 +114,7 @@ def setup_parsers():
     cmds_with_sub_cmds.extend(pricing.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(accounting.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(quota.cmds_with_sub_cmds)
+    cmds_with_sub_cmds.extend(resources.cmds_with_sub_cmds)
 
 
 def parse_args():
@@ -149,6 +152,7 @@ def parse_args():
     pricing.parse_args(args)
     accounting.parse_args(args)
     quota.parse_args(args)
+    resources.parse_args(args)
 
 
 def execute_command():
@@ -160,7 +164,7 @@ def execute_command():
     function_name = args.command.replace('-', '_')
     if args.sub_command:
         function_name += f'_{args.sub_command}'
-    for module in [user, hello, pricing, accounting, quota]:
+    for module in [user, hello, pricing, accounting, quota, resources]:
         if hasattr(module, function_name):
             function = getattr(module, function_name)
     function(args)
