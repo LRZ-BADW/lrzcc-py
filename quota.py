@@ -95,7 +95,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
     # avoid variable not used warnings
     do_nothing(flavor_quota_list_parser)
-    do_nothing(flavor_quota_create_parser)
 
     return parsers
 
