@@ -4,6 +4,8 @@
     "moinmoin",
     "orgtbl",
     "psql",
-    "tablefmt"
+    "tablefmt",
+    "xhuge",
+    "xlarge"
   ]
 }
