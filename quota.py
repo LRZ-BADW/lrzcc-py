@@ -52,9 +52,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Create a flavor quota",
             )
     flavor_quota_create_parser.add_argument(
-        "flavor",
-        type=valid_flavor,
-        help="Flavor name",
+        "flavorgroup",
+        type=int,
+        help="Flavor group ID",
     )
     flavor_quota_create_parser.add_argument(
         "user",
@@ -120,7 +120,7 @@ def flavor_quota_show(args: Namespace):
 def flavor_quota_create(args: Namespace):
     '''create a flavor quota'''
     data = {
-        "flavor": args.flavor,
+        "flavor_group": args.flavorgroup,
         "user": args.user,
         "quota": args.quota,
     }
