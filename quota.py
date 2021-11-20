@@ -32,6 +32,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List flavor quotas",
             )
+    flavor_quota_list_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List flavor quotas of all users",
+    )
 
     # flavor quota show parser
     flavor_quota_show_parser: ArgumentParser = \
@@ -107,7 +113,11 @@ def parse_args(args: Namespace):
 
 def flavor_quota_list(args: Namespace):
     '''list flavor quotas'''
-    resp = api_request('get', '/quota/flavorquotas', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    url = f"/quota/flavorquotas{params}"
+    resp = api_request('get', url, None, args)
     print_response(resp, args)
 
 
