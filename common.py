@@ -41,6 +41,7 @@ def valid_datetime(string):
 
 
 def valid_flavor(string):
+    # TODO rewrite this according to new flavor api
     flavors = [
         'tiny',
         'lrz.small',

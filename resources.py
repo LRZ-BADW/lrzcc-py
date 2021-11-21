@@ -92,6 +92,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the flavor',
         )
 
+    # flavor import parser
+    flavor_import_parser: ArgumentParser = \
+        flavor_subparsers.add_parser(
+            "import",
+            help="Import flavors from OpenStack API",
+            )
+
     # flavor group list parser
     flavor_group_list_parser: ArgumentParser = \
         flavor_group_subparsers.add_parser(
@@ -149,6 +156,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
     # avoid variable not used warnings
     do_nothing(flavor_list_parser)
+    do_nothing(flavor_import_parser)
     do_nothing(flavor_group_list_parser)
 
     return parsers
@@ -162,7 +170,7 @@ def parse_args(args: Namespace):
 
 def flavor_list(args: Namespace):
     '''list flavors'''
-    resp = api_request('get', '/resources/flavors', None, args)
+    resp = api_request('get', '/resources/flavors/', None, args)
     print_response(resp, args)
 
 
@@ -192,6 +200,12 @@ def flavor_modify(args: Namespace):
 def flavor_delete(args: Namespace):
     '''delete the flavor with the given id'''
     resp = api_request('delete', f'/resources/flavors/{args.id}', None, args)
+    print_response(resp, args)
+
+
+def flavor_import(args: Namespace):
+    '''import all the flavors from the OpenStack API'''
+    resp = api_request('get', '/resources/flavors/import/', None, args)
     print_response(resp, args)
 
 

@@ -116,6 +116,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the user',
         )
 
+    # user import parser
+    user_modify_parser: ArgumentParser = \
+        user_subparsers.add_parser(
+            "import",
+            help="Import users and projects from OpenStack API",
+            )
+
     # project list parser
     project_list_parser: ArgumentParser = \
         project_subparsers.add_parser(
@@ -228,6 +235,12 @@ def user_modify(args: Namespace):
 def user_delete(args: Namespace):
     '''delete the user with the given id'''
     resp = api_request('delete', f'/user/users/{args.id}', None, args)
+    print_response(resp, args)
+
+
+def user_import(args: Namespace):
+    '''Import users and projects from the OpenStack API'''
+    resp = api_request('get', '/user/import/', None, args)
     print_response(resp, args)
 
 
