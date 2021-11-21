@@ -117,7 +117,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # user import parser
-    user_modify_parser: ArgumentParser = \
+    user_import_parser: ArgumentParser = \
         user_subparsers.add_parser(
             "import",
             help="Import users and projects from OpenStack API",
@@ -189,6 +189,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     # avoid variable not used warnings
     do_nothing(user_list_parser)
     do_nothing(user_create_parser)
+    do_nothing(user_import_parser)
     do_nothing(project_list_parser)
     do_nothing(project_create_parser)
 
