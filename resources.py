@@ -226,5 +226,6 @@ def flavor_group_modify(args: Namespace):
 
 def flavor_group_delete(args: Namespace):
     '''delete the flavor group with the given id'''
-    resp = api_request('delete', f'/resources/flavorgroups/{args.id}', None, args)
+    resp = api_request('delete', f'/resources/flavorgroups/{args.id}', None,
+                       args)
     print_response(resp, args)
