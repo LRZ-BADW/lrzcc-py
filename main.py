@@ -92,6 +92,18 @@ def setup_parsers():
                         required=False,
                         default="github",
                         )
+    parser.add_argument('-n',
+                        '--names',
+                        action='store_true',
+                        help="""force parser to treat arguments that could
+                             be names or IDs as names""",
+                        )
+    parser.add_argument('-i',
+                        '--ids',
+                        action='store_true',
+                        help="""force parser to treat arguments that could
+                             be names or IDs as IDs""",
+                        )
 
     # add main arguments here
     global subparsers
@@ -143,6 +155,13 @@ def parse_args():
     else:
         print(f"{sys.argv[0]}: error: no Openstack token given. "
               "Use -t/--token or the environment variable OS_TOKEN.",
+              file=sys.stderr)
+        exit(1)
+
+    # check that --names and --ids are not both given
+    if args.names and args.ids:
+        print(f"{sys.argv[0]}: error: mutually exclusive arguments "
+              "Use -n/--names OR -i/--ids but not both.",
               file=sys.stderr)
         exit(1)
 
