@@ -208,8 +208,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
 
 def parse_args(args: Namespace):
-    '''parse the command line arguments'''
-    # TODO
+    '''do custom command line argument checks'''
     pass
 
 
