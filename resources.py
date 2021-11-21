@@ -67,6 +67,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="Flavor name",
     )
+    flavor_create_parser.add_argument(
+        "--group",
+        "-g",
+        type=int,
+        help="Flavor group ID",
+    )
+    flavor_create_parser.add_argument(
+        "--weight",
+        "-w",
+        type=int,
+        help="Weight of flavor within it's group",
+    )
 
     # flavor delete parser
     flavor_delete_parser: ArgumentParser = \
@@ -186,7 +198,12 @@ def flavor_create(args: Namespace):
         "name": args.name,
         # "group": None,
     }
-    print(data)
+    if args.group is not None:
+        # TODO why do i need group_id here rather than group,
+        #      because it works in user_create() with project
+        data['group_id'] = args.group
+    if args.weight is not None:
+        data['weight'] = args.weight
     resp = api_request('post', '/resources/flavors/', data, args)
     print_response(resp, args)
 
