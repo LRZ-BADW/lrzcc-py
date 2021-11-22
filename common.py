@@ -2,7 +2,7 @@ import tabulate
 import requests
 import json
 from datetime import datetime
-from argparse import ArgumentError
+from argparse import ArgumentError, Namespace
 
 
 def do_nothing(variable):
