@@ -61,3 +61,39 @@ def valid_flavor(string):
         return flavors.index(string) + 1
     msg = f"Not a valid flavor: {string}. Valid choices are: {flavors}"
     raise ArgumentError(msg)
+
+
+list_paths = {
+    'flavor': '/resources/flavors/',
+    'project': '/user/projects/',
+    'user': '/user/users/',
+}
+
+
+def api_list(entity: str, args: Namespace):
+    path = list_paths[entity]
+    resp = api_request('get', path, None, args)
+    return resp.json()
+
+
+def search_entity(entity: str, string: str, args: Namespace):
+    items = api_list(entity, args)
+
+    for item in items:
+        if ((not args.ids and item['name'] == string)
+                or (not args.names and str(item['id']) == string)):
+            return item
+
+    return None
+
+
+def search_flavor(string: str, args: Namespace):
+    return search_entity('flavor', string, args)
+
+
+def search_project(string: str, args: Namespace):
+    return search_entity('project', string, args)
+
+
+def search_user(string: str, args: Namespace):
+    return search_entity('user', string, args)
