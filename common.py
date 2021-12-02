@@ -65,6 +65,7 @@ def valid_flavor(string):
 
 list_paths = {
     'flavor': '/resources/flavors/',
+    'flavor_group': '/resources/flavorgroups/',
     'project': '/user/projects/',
     'user': '/user/users/',
 }
@@ -89,6 +90,10 @@ def search_entity(entity: str, string: str, args: Namespace):
 
 def search_flavor(string: str, args: Namespace):
     return search_entity('flavor', string, args)
+
+
+def search_flavor_group(string: str, args: Namespace):
+    return search_entity('flavor_group', string, args)
 
 
 def search_project(string: str, args: Namespace):
