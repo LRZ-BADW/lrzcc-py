@@ -2,7 +2,7 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    valid_flavor)
+                    parse_flavor)
 
 
 cmds_with_sub_cmds = ['flavor-price']
@@ -53,8 +53,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             )
     flavor_price_create_parser.add_argument(
         "flavor",
-        type=valid_flavor,
-        help="Flavor name",
+        type=str,
+        help="Flavor name or ID",
     )
     flavor_price_create_parser.add_argument(
         "userclass",
@@ -112,7 +112,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
 def parse_args(args: Namespace):
     '''do custom command line arguments checks'''
-    pass
+
+    parse_flavor(args)
 
 
 def flavor_price_list(args: Namespace):
