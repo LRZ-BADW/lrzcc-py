@@ -50,9 +50,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Show a user",
             )
     user_show_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the user',
+        "user",
+        type=str,
+        help='Name or ID of the user',
         )
 
     # user create parser
@@ -68,8 +68,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
     user_create_parser.add_argument(
         "project",
-        type=int,
-        help="Project ID",
+        type=str,
+        help="Project Name or ID",
     )
     user_create_parser.add_argument(
         "-r",
@@ -99,9 +99,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Delete a user",
             )
     user_delete_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the user',
+        "user",
+        type=str,
+        help='Name or ID of the user',
         )
 
     # user modify parser
@@ -111,9 +111,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Modify a user",
             )
     user_modify_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the user',
+        "user",
+        type=str,
+        help='Name or ID of the user',
         )
 
     # user import parser
@@ -137,9 +137,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Show a project",
             )
     project_show_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the project',
+        "project",
+        type=str,
+        help='Name or ID of the project',
         )
 
     # project create parser
@@ -151,7 +151,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     project_create_parser.add_argument(
         "name",
         type=str,
-        help='name of the project',
+        help='Name of the project',
     )
     project_create_parser.add_argument(
         "-u",
@@ -169,9 +169,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Delete a project",
             )
     project_delete_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the project',
+        "project",
+        type=str,
+        help='Name or ID of the project',
         )
 
     # project modify parser
@@ -181,9 +181,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Modify a project",
             )
     project_modify_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the project',
+        "project",
+        type=str,
+        help='Name or ID of the project',
         )
 
     # avoid variable not used warnings
@@ -209,7 +209,7 @@ def user_list(args: Namespace):
 
 def user_show(args: Namespace):
     '''show the user with the given id'''
-    resp = api_request('get', f'/user/users/{args.id}', None, args)
+    resp = api_request('get', f'/user/users/{args.user}', None, args)
     print_response(resp, args)
 
 
@@ -234,7 +234,7 @@ def user_modify(args: Namespace):
 
 def user_delete(args: Namespace):
     '''delete the user with the given id'''
-    resp = api_request('delete', f'/user/users/{args.id}', None, args)
+    resp = api_request('delete', f'/user/users/{args.user}', None, args)
     print_response(resp, args)
 
 
@@ -252,7 +252,7 @@ def project_list(args: Namespace):
 
 def project_show(args: Namespace):
     '''show the project with the given id'''
-    resp = api_request('get', f'/user/projects/{args.id}', None, args)
+    resp = api_request('get', f'/user/projects/{args.project}', None, args)
     print_response(resp, args)
 
 
@@ -275,5 +275,5 @@ def project_modify(args: Namespace):
 
 def project_delete(args: Namespace):
     '''delete the project with the given id'''
-    resp = api_request('delete', f'/user/projects/{args.id}', None, args)
+    resp = api_request('delete', f'/user/projects/{args.project}', None, args)
     print_response(resp, args)

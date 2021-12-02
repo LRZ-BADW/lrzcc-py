@@ -79,6 +79,9 @@ def api_list(entity: str, args: Namespace):
 
 
 def search_entity(entity: str, string: str, args: Namespace):
+    # TODO Maybe in the future names won't be unique, so we have to deal with
+    # situations where commands are ambiguous. Some form of listing from which
+    # the user may choose would be pretty fancy.
     items = api_list(entity, args)
 
     for item in items:
