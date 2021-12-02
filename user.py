@@ -1,6 +1,7 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
-from common import do_nothing, print_response, api_request
+from common import (do_nothing, print_response, api_request, parse_project,
+                    parse_user)
 
 
 cmds_with_sub_cmds = ['user', 'project']
@@ -198,7 +199,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
 def parse_args(args: Namespace):
     '''do custom command line argument checks'''
-    pass
+
+    parse_project(args)
+    parse_user(args)
 
 
 def user_list(args: Namespace):
