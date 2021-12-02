@@ -5,6 +5,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_flavor)
 
 
+cmds = ['flavor-price']
 cmds_with_sub_cmds = ['flavor-price']
 
 

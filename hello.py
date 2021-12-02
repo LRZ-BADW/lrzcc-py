@@ -5,6 +5,7 @@ import tabulate
 import common
 
 
+cmds = ['hello']
 cmds_with_sub_cmds = ['hello']
 
 

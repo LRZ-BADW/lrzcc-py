@@ -4,6 +4,7 @@ from common import (do_nothing, print_response, api_request, parse_project,
                     parse_user)
 
 
+cmds = ['user', 'project']
 cmds_with_sub_cmds = ['user', 'project']
 
 

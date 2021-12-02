@@ -3,6 +3,7 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 from common import do_nothing, print_response, api_request, valid_datetime
 
 
+cmds = ['server-action']
 cmds_with_sub_cmds = ['server-action']
 
 

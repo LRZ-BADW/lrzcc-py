@@ -5,6 +5,7 @@ import sys
 from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_flavor, parse_flavor_group)
 
+cmds = ['flavor', 'flavor-group']
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
 
 

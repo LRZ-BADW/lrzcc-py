@@ -22,11 +22,14 @@ parser = None
 subparsers = None
 
 parsers = {}
+cmd_mod_map = {}
 cmds_with_sub_cmds = []
 
 args = None
 
 token = None
+
+module = None
 
 
 def setup_parsers():
@@ -128,6 +131,11 @@ def setup_parsers():
     cmds_with_sub_cmds.extend(quota.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(resources.cmds_with_sub_cmds)
 
+    # get command to module map
+    for module in [user, hello, pricing, accounting, quota, resources]:
+        for cmd in module.cmds:
+            cmd_mod_map[cmd] = module
+
 
 def parse_args():
     '''parse the command line arguments'''
@@ -165,13 +173,12 @@ def parse_args():
               file=sys.stderr)
         exit(1)
 
+    # get module for specified command
+    global module
+    module = cmd_mod_map[args.command]
+
     # do module argument checks
-    user.parse_args(args)
-    hello.parse_args(args)
-    pricing.parse_args(args)
-    accounting.parse_args(args)
-    quota.parse_args(args)
-    resources.parse_args(args)
+    module.parse_args(args)
 
 
 def execute_command():
@@ -183,9 +190,8 @@ def execute_command():
     function_name = args.command.replace('-', '_')
     if args.sub_command:
         function_name += f'_{args.sub_command}'
-    for module in [user, hello, pricing, accounting, quota, resources]:
-        if hasattr(module, function_name):
-            function = getattr(module, function_name)
+    if hasattr(module, function_name):
+        function = getattr(module, function_name)
     function(args)
 
 
