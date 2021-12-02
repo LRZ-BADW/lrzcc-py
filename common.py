@@ -121,8 +121,8 @@ def parse_flavor(args: Namespace):
     parse_entity('flavor', args)
 
 
-def parse_flavor_group(args: Namespace):
-    parse_entity('flavor_group', args, 'group')
+def parse_flavor_group(args: Namespace, argname='group'):
+    parse_entity('flavor_group', args, argname)
 
 
 def parse_project(args: Namespace):
