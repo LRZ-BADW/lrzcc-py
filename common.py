@@ -3,6 +3,7 @@ import requests
 import json
 from datetime import datetime
 from argparse import ArgumentError, Namespace
+import sys
 
 
 def do_nothing(variable):
@@ -102,3 +103,31 @@ def search_project(string: str, args: Namespace):
 
 def search_user(string: str, args: Namespace):
     return search_entity('user', string, args)
+
+
+def parse_entity(entity: str, args: Namespace, argname: str = None):
+    if not argname:
+        argname = entity
+    if argname in args and args.__dict__[argname]:
+        obj = search_entity(entity, args.__dict__[argname], args)
+        if not obj:
+            print(f'{sys.argv[0]}: error: not a valid {entity}: ' +
+                  f'{args.__dict__[argname]}', file=sys.stderr)
+            exit(1)
+        args.__dict__[argname] = obj['id']
+
+
+def parse_flavor(args: Namespace):
+    parse_entity('flavor', args)
+
+
+def parse_flavor_group(args: Namespace):
+    parse_entity('flavor_group', args, 'group')
+
+
+def parse_project(args: Namespace):
+    parse_entity('project', args)
+
+
+def parse_user(args: Namespace):
+    parse_entity('user', args)
