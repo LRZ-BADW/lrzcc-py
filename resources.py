@@ -1,8 +1,9 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 from datetime import datetime
+import sys
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    valid_flavor)
+                    valid_flavor, search_flavor)
 
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
 
@@ -51,9 +52,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Show a flavor",
             )
     flavor_show_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor',
+        "flavor",
+        type=str,
+        help='Name or ID of the flavor',
         )
 
     # flavor create parser
@@ -87,9 +88,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Delete a flavor",
             )
     flavor_delete_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor',
+        "flavor",
+        type=str,
+        help='Name or ID of the flavor',
         )
 
     # flavor modify parser
@@ -99,9 +100,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Modify a flavor",
             )
     flavor_modify_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor',
+        "flavor",
+        type=str,
+        help='Name or ID of the flavor',
         )
 
     # flavor import parser
@@ -176,7 +177,15 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
 def parse_args(args: Namespace):
     '''do custom command line argument checks'''
-    pass
+
+    # check if flavor exists
+    if 'flavor' in args and args.flavor:
+        flavor = search_flavor(args.flavor, args)
+        if not flavor:
+            print(f'{sys.argv[0]}: error: not a valid flavor: {args.flavor}',
+                  file=sys.stderr)
+            exit(1)
+        args.flavor = flavor['id']
 
 
 def flavor_list(args: Namespace):
@@ -187,7 +196,7 @@ def flavor_list(args: Namespace):
 
 def flavor_show(args: Namespace):
     '''show the flavor with the given id'''
-    resp = api_request('get', f'/resources/flavors/{args.id}', None, args)
+    resp = api_request('get', f'/resources/flavors/{args.flavor}', None, args)
     print_response(resp, args)
 
 
@@ -215,7 +224,7 @@ def flavor_modify(args: Namespace):
 
 def flavor_delete(args: Namespace):
     '''delete the flavor with the given id'''
-    resp = api_request('delete', f'/resources/flavors/{args.id}', None, args)
+    resp = api_request('delete', f'/resources/flavors/{args.flavor}', None, args)
     print_response(resp, args)
 
 
