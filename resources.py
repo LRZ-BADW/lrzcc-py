@@ -3,7 +3,7 @@ from datetime import datetime
 import sys
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    valid_flavor, search_flavor)
+                    parse_flavor, parse_flavor_group)
 
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
 
@@ -71,8 +71,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     flavor_create_parser.add_argument(
         "--group",
         "-g",
-        type=int,
-        help="Flavor group ID",
+        type=str,
+        help="Name or ID of the flavor group",
     )
     flavor_create_parser.add_argument(
         "--weight",
@@ -126,9 +126,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Show a flavor group",
             )
     flavor_group_show_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor group',
+        "group",
+        type=str,
+        help='Name or ID of the flavor group',
         )
 
     # flavor group create parser
@@ -150,9 +150,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Delete a flavor group",
             )
     flavor_group_delete_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor group',
+        "group",
+        type=str,
+        help='Name or ID of the flavor group',
         )
 
     # flavor group modify parser
@@ -162,9 +162,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Modify a flavor group",
             )
     flavor_group_modify_parser.add_argument(
-        "id",
-        type=int,
-        help='ID of the flavor group',
+        "group",
+        type=str,
+        help='Name or ID of the flavor group',
         )
 
     # avoid variable not used warnings
@@ -178,14 +178,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 def parse_args(args: Namespace):
     '''do custom command line argument checks'''
 
-    # check if flavor exists
-    if 'flavor' in args and args.flavor:
-        flavor = search_flavor(args.flavor, args)
-        if not flavor:
-            print(f'{sys.argv[0]}: error: not a valid flavor: {args.flavor}',
-                  file=sys.stderr)
-            exit(1)
-        args.flavor = flavor['id']
+    parse_flavor(args)
+    parse_flavor_group(args)
 
 
 def flavor_list(args: Namespace):
@@ -242,7 +236,8 @@ def flavor_group_list(args: Namespace):
 
 def flavor_group_show(args: Namespace):
     '''show the flavor group with the given id'''
-    resp = api_request('get', f'/resources/flavorgroups/{args.id}', None, args)
+    resp = api_request('get', f'/resources/flavorgroups/{args.group}', None,
+                       args)
     print_response(resp, args)
 
 
@@ -265,6 +260,6 @@ def flavor_group_modify(args: Namespace):
 
 def flavor_group_delete(args: Namespace):
     '''delete the flavor group with the given id'''
-    resp = api_request('delete', f'/resources/flavorgroups/{args.id}', None,
+    resp = api_request('delete', f'/resources/flavorgroups/{args.group}', None,
                        args)
     print_response(resp, args)
