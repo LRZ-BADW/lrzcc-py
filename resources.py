@@ -286,7 +286,6 @@ def flavor_group_create(args: Namespace):
         "name": args.name,
         "flavors": [],
     }
-    print(data)
     resp = api_request('post', '/resources/flavorgroups/', data, args)
     print_response(resp, args)
 
