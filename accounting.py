@@ -122,22 +122,19 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
     server_action_create_parser.add_argument(
         "flavor",
-        # TODO use valid_flavor() once that's created
         type=str,
-        help="name of the flavor the instance, matches either flavor_new or "
-             "flavor_old",
+        help="Name or ID of the flavor the instance, matches either flavor_new"
+             " or flavor_old",
     )
     server_action_create_parser.add_argument(
         "flavor_new",
-        # TODO use valid_flavor() once that's created
         type=str,
-        help="name of the flavor the instance had after the action",
+        help="Name or ID of the flavor the instance had after the action",
     )
     server_action_create_parser.add_argument(
         "flavor_old",
-        # TODO use valid_flavor() once that's created
         type=str,
-        help="name of the flavor the instance had before the action",
+        help="Name or ID of the flavor the instance had before the action",
     )
     server_action_create_parser.add_argument(
         "action",
@@ -211,7 +208,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
 def parse_args(args: Namespace):
     '''do custom command line argument checks'''
-    pass
+
+    # TODO parse these too? maybe problematic when lrz user id is reused for
+    #      different user
+    # parse_user(args)
+    # parse_project(args)
+
+    # TODO this is not very efficient, because it's going to make the same
+    #      API request three times, so we should change the parse functions
+    #      to take a list of argument names
+    parse_flavor(args)
+    parse_flavor(args, 'flavor_new')
+    parse_flavor(args, 'flavor_old')
 
 
 def server_action_list(args: Namespace):
