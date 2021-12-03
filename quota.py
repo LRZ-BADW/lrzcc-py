@@ -1,8 +1,7 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-from datetime import datetime
 
-from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor_group)
+from common import (do_nothing, print_response, api_request,
+                    parse_flavor_group, parse_user)
 
 
 cmds = ['flavor-quota']
@@ -65,8 +64,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
     flavor_quota_create_parser.add_argument(
         "user",
-        type=int,
-        help="User ID",
+        type=str,
+        help="User name or ID",
     )
     flavor_quota_create_parser.add_argument(
         "-q",
@@ -110,6 +109,7 @@ def parse_args(args: Namespace):
     '''do custom command line argument checks'''
 
     parse_flavor_group(args, 'flavorgroup')
+    parse_user(args)
 
 
 def flavor_quota_list(args: Namespace):
