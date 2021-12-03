@@ -3,7 +3,7 @@ from datetime import datetime
 import sys
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor, parse_flavor_group)
+                    parse_flavor, parse_flavor_group, generate_modify_data)
 
 cmds = ['flavor', 'flavor-group']
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
@@ -105,6 +105,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help='Name or ID of the flavor',
         )
+    flavor_modify_parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        help="New name for the flavor",
+    )
+    flavor_modify_group_group = \
+        flavor_modify_parser.add_mutually_exclusive_group()
+    flavor_modify_group_group.add_argument(
+        "-g",
+        "--group",
+        type=str,
+        help="Name or ID of the new flavor group",
+    )
+    flavor_modify_group_group.add_argument(
+        "-G",
+        "--nogroup",
+        action='store_true',
+        help="Remove the flavor from its group",
+    )
+    flavor_modify_parser.add_argument(
+        "-w",
+        "--weight",
+        type=int,
+        help="New weight within the respective flavor group",
+    )
 
     # flavor import parser
     flavor_import_parser: ArgumentParser = \
@@ -167,6 +193,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help='Name or ID of the flavor group',
         )
+    flavor_group_modify_parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        help="New name for the flavor group",
+    )
 
     # avoid variable not used warnings
     do_nothing(flavor_list_parser)
@@ -213,8 +245,14 @@ def flavor_create(args: Namespace):
 
 def flavor_modify(args: Namespace):
     '''modify the flavor with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('name', str, 'name'),
+                                 ('group', int, 'group'),
+                                 ('weight', int, 'weight'),
+                                 ])
+    resp = api_request('patch', f'/resources/flavors/{args.flavor}/', data,
+                       args)
+    print_response(resp, args)
 
 
 def flavor_delete(args: Namespace):
