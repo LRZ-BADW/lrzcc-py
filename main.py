@@ -95,13 +95,13 @@ def setup_parsers():
                         required=False,
                         default="github",
                         )
-    parser.add_argument('-n',
+    parser.add_argument('-N',
                         '--names',
                         action='store_true',
                         help="""force parser to treat arguments that could
                              be names or IDs as names""",
                         )
-    parser.add_argument('-i',
+    parser.add_argument('-I',
                         '--ids',
                         action='store_true',
                         help="""force parser to treat arguments that could
