@@ -293,8 +293,12 @@ def flavor_group_create(args: Namespace):
 
 def flavor_group_modify(args: Namespace):
     '''modify the flavor group with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('name', str, 'name'),
+                                 ])
+    resp = api_request('patch', f'/resources/flavorgroups/{args.group}/', data,
+                       args)
+    print_response(resp, args)
 
 
 def flavor_group_delete(args: Namespace):
