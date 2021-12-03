@@ -120,8 +120,8 @@ def parse_entity(entity: str, args: Namespace, argname: str = None):
         args.__dict__[argname] = obj['id']
 
 
-def parse_flavor(args: Namespace):
-    parse_entity('flavor', args)
+def parse_flavor(args: Namespace, argname='flavor'):
+    parse_entity('flavor', args, argname)
 
 
 def parse_flavor_group(args: Namespace, argname='group'):
