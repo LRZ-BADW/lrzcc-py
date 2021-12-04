@@ -92,6 +92,10 @@ def search_entity(entity: str, string: str, args: Namespace):
 
     return None
 
+# TODO there are also entities without names like flavor quotas, a more
+# elaborate function to search them by flavor group and user would be
+# cool
+
 
 def search_flavor(string: str, args: Namespace):
     return search_entity('flavor', string, args)

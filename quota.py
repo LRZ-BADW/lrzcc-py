@@ -38,6 +38,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         action="store_true",
         help="List flavor quotas of all users",
     )
+    # TODO an argument to filter by user would be great
 
     # flavor quota show parser
     flavor_quota_show_parser: ArgumentParser = \
