@@ -242,13 +242,25 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help='Name or ID of the project',
         )
+    project_modify_parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        help="New name for the project",
+    )
+    project_modify_parser.add_argument(
+        "-u",
+        "--user-class",
+        type=int,
+        choices=[1, 2, 3, 4, 5, 6],
+        help="New user class of the project",
+    )
+
 
     # avoid variable not used warnings
     do_nothing(user_list_parser)
-    do_nothing(user_create_parser)
     do_nothing(user_import_parser)
     do_nothing(project_list_parser)
-    do_nothing(project_create_parser)
 
     return parsers
 
@@ -336,8 +348,12 @@ def project_create(args: Namespace):
 
 def project_modify(args: Namespace):
     '''modify the project with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('name', str, 'name'),
+                                 ('user_class', int, 'user_class'),
+                                 ])
+    resp = api_request('patch', f'/user/projects/{args.project}/', data, args)
+    print_response(resp, args)
 
 
 def project_delete(args: Namespace):
