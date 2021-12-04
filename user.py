@@ -256,7 +256,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="New user class of the project",
     )
 
-
     # avoid variable not used warnings
     do_nothing(user_list_parser)
     do_nothing(user_import_parser)
