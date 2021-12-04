@@ -1,7 +1,7 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
 from common import (do_nothing, print_response, api_request,
-                    parse_flavor_group, parse_user)
+                    parse_flavor_group, parse_user, generate_modify_data)
 
 
 cmds = ['flavor-quota']
@@ -98,6 +98,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='ID of the flavor quota',
         )
+    flavor_quota_modify_parser.add_argument(
+        "-q",
+        "--quota",
+        type=int,
+        help="New quota value",
+    )
 
     # avoid variable not used warnings
     do_nothing(flavor_quota_list_parser)
@@ -142,8 +148,11 @@ def flavor_quota_create(args: Namespace):
 
 def flavor_quota_modify(args: Namespace):
     '''modify the flavor quota with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('quota', int, 'quota'),
+                                 ])
+    resp = api_request('patch', f'/quota/flavorquotas/{args.id}/', data, args)
+    print_response(resp, args)
 
 
 def flavor_quota_delete(args: Namespace):
