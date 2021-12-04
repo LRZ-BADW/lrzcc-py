@@ -4,6 +4,7 @@
     "moinmoin",
     "orgtbl",
     "psql",
+    "pydoc",
     "tablefmt",
     "xhuge",
     "xlarge"

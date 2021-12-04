@@ -140,7 +140,7 @@ def parse_user(args: Namespace):
 def generate_modify_data(args: Namespace, fields):
     data = {}
     for fieldname, fieldtype, argname in fields:
-        if argname in args and args.__dict__[argname]:
+        if argname in args and args.__dict__[argname] is not None:
             data[fieldname] = fieldtype(args.__dict__[argname])
         if f'no{argname}' in args and args.__dict__[f'no{argname}']:
             data[fieldname] = None

@@ -1,7 +1,7 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
 from common import (do_nothing, print_response, api_request, parse_project,
-                    parse_user)
+                    parse_user, generate_modify_data)
 
 
 cmds = ['user', 'project']
@@ -117,6 +117,61 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help='Name or ID of the user',
         )
+    user_modify_parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        help="New name for the user",
+    )
+    user_modify_parser.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="New project of the user",
+    )
+    user_modify_parser.add_argument(
+        "-r",
+        "--role",
+        type=str,
+        choices=["user", "masteruser"],
+        help="New role of the user within the project",
+    )
+    user_modify_staff_group = \
+        user_modify_parser.add_mutually_exclusive_group()
+    user_modify_staff_group.add_argument(
+        "-s",
+        "--staff",
+        dest="staff",
+        action="store_true",
+        default=None,
+        help="Make the user staff",
+    )
+    user_modify_staff_group.add_argument(
+        "-S",
+        "--nostaff",
+        dest="staff",
+        action="store_false",
+        default=None,
+        help="Make user not-staff",
+    )
+    user_modify_active_group = \
+        user_modify_parser.add_mutually_exclusive_group()
+    user_modify_active_group.add_argument(
+        "-a",
+        "--active",
+        dest="active",
+        action="store_true",
+        default=None,
+        help="Activate the user",
+    )
+    user_modify_active_group.add_argument(
+        "-i",
+        "--inactive",
+        dest="active",
+        action="store_false",
+        default=None,
+        help="Deactivate the user",
+    )
 
     # user import parser
     user_import_parser: ArgumentParser = \
@@ -232,8 +287,16 @@ def user_create(args: Namespace):
 
 def user_modify(args: Namespace):
     '''modify the user with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('name', str, 'name'),
+                                 ('project', int, 'project'),
+                                 ('is_staff', bool, 'staff'),
+                                 ('is_active', bool, 'active'),
+                                 ])
+    if "role" in args and args.role:
+        data["role"] = 1 if args.role == 'user' else 2
+    resp = api_request('patch', f'/user/users/{args.user}/', data, args)
+    print_response(resp, args)
 
 
 def user_delete(args: Namespace):
