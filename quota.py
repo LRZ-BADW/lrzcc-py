@@ -157,6 +157,5 @@ def flavor_quota_modify(args: Namespace):
 
 def flavor_quota_delete(args: Namespace):
     '''delete the flavor quota with the given id'''
-    resp = api_request('delete', f'/quota/flavorquotas/{args.id}', None,
-                       args)
+    resp = api_request('delete', f'/quota/flavorquotas/{args.id}', None, args)
     print_response(resp, args)
