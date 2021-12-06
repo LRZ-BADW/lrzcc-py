@@ -224,7 +224,7 @@ def parse_args(args: Namespace):
 
 def server_action_list(args: Namespace):
     '''list server actions'''
-    resp = api_request('get', '/accountint/serveractions', None, args)
+    resp = api_request('get', '/accounting/serveractions', None, args)
     print_response(resp, args)
 
 
