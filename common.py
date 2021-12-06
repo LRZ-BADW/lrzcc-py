@@ -18,9 +18,14 @@ def print_response(resp, args):
     if not resp.content:
         return
     if type(resp.json()) == list:
-        output = tabulate.tabulate(resp.json(), tablefmt=args.format)
+        headers = {}
+        if resp.json():
+            headers = {key: key for key in resp.json()[0].keys()}
+        output = tabulate.tabulate(resp.json(), tablefmt=args.format,
+                                   headers=headers)
     else:
-        output = tabulate.tabulate(resp.json().items(), tablefmt=args.format)
+        output = tabulate.tabulate(resp.json().items(), tablefmt=args.format,
+                                   headers=['name', 'value'])
     print(output)
 
 
