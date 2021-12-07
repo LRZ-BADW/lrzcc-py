@@ -32,13 +32,26 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List flavor quotas",
             )
-    flavor_quota_list_parser.add_argument(
+    flavor_quota_list_filter_group = \
+        flavor_quota_list_parser.add_mutually_exclusive_group()
+    flavor_quota_list_filter_group.add_argument(
         "-a",
         "--all",
         action="store_true",
         help="List flavor quotas of all users",
     )
-    # TODO an argument to filter by user would be great
+    flavor_quota_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List flavor quotas for the user specified by name or ID",
+    )
+    flavor_quota_list_filter_group.add_argument(
+        "-g",
+        "--flavorgroup",
+        type=str,
+        help="List flavor quotas for the flavor group specified by name or ID",
+    )
 
     # flavor quota show parser
     flavor_quota_show_parser: ArgumentParser = \
@@ -124,6 +137,10 @@ def flavor_quota_list(args: Namespace):
     params = ""
     if args.all:
         params += "?all=True"
+    elif args.user:
+        params += f"?user={args.user}"
+    elif args.flavorgroup:
+        params += f"?flavorgroup={args.flavorgroup}"
     url = f"/quota/flavorquotas{params}"
     resp = api_request('get', url, None, args)
     print_response(resp, args)
