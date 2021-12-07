@@ -265,7 +265,8 @@ def flavor_modify(args: Namespace):
 
 def flavor_delete(args: Namespace):
     '''delete the flavor with the given id'''
-    resp = api_request('delete', f'/resources/flavors/{args.flavor}', None, args)
+    resp = api_request('delete', f'/resources/flavors/{args.flavor}', None,
+                       args)
     print_response(resp, args)
 
 
