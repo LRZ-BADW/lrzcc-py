@@ -200,10 +200,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="New name for the flavor group",
     )
 
+    # flavor group modify parser
+    flavor_group_initialize_parser: ArgumentParser = \
+        flavor_group_subparsers.add_parser(
+            "initialize",
+            help="Initialize the default flavor groups",
+            )
+
     # avoid variable not used warnings
     do_nothing(flavor_list_parser)
     do_nothing(flavor_import_parser)
     do_nothing(flavor_group_list_parser)
+    do_nothing(flavor_group_initialize_parser)
 
     return parsers
 
@@ -303,5 +311,12 @@ def flavor_group_modify(args: Namespace):
 def flavor_group_delete(args: Namespace):
     '''delete the flavor group with the given id'''
     resp = api_request('delete', f'/resources/flavorgroups/{args.group}', None,
+                       args)
+    print_response(resp, args)
+
+
+def flavor_group_initialize(args: Namespace):
+    '''initialize the default flavor groups'''
+    resp = api_request('get', '/resources/flavorgroups/initialize/', None,
                        args)
     print_response(resp, args)
