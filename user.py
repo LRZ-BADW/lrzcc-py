@@ -44,6 +44,19 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List users",
             )
+    user_list_filter_group = user_list_parser.add_mutually_exclusive_group()
+    user_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all users",
+    )
+    user_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List users of the project specified by name or ID",
+    )
 
     # user show parser
     user_show_parser: ArgumentParser = \
@@ -186,6 +199,21 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List projects",
             )
+    project_list_filter_group = \
+        project_list_parser.add_mutually_exclusive_group()
+    project_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all projects",
+    )
+    project_list_parser.add_argument(
+        "-u",
+        "--user-class",
+        type=int,
+        choices=[1, 2, 3, 4, 5, 6],
+        help="List projects with the specified user class",
+    )
 
     # project show parser
     project_show_parser: ArgumentParser = \
@@ -273,7 +301,12 @@ def parse_args(args: Namespace):
 
 def user_list(args: Namespace):
     '''list users'''
-    resp = api_request('get', '/user/users', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    elif args.project:
+        params += f"?project={args.project}"
+    resp = api_request('get', f'/user/users/{params}', None, args)
     print_response(resp, args)
 
 
@@ -324,7 +357,12 @@ def user_import(args: Namespace):
 
 def project_list(args: Namespace):
     '''list projects'''
-    resp = api_request('get', '/user/projects', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    elif args.user_class:
+        params += f"?userclass={args.user_class}"
+    resp = api_request('get', f'/user/projects/{params}', None, args)
     print_response(resp, args)
 
 
