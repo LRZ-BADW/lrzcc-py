@@ -193,6 +193,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Import users and projects from OpenStack API",
             )
 
+    # user me parser
+    user_me_parser: ArgumentParser = \
+        user_subparsers.add_parser(
+            "me",
+            help="Show your own user",
+            )
+
     # project list parser
     project_list_parser: ArgumentParser = \
         project_subparsers.add_parser(
@@ -287,6 +294,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     # avoid variable not used warnings
     do_nothing(user_list_parser)
     do_nothing(user_import_parser)
+    do_nothing(user_me_parser)
     do_nothing(project_list_parser)
 
     return parsers
@@ -352,6 +360,12 @@ def user_delete(args: Namespace):
 def user_import(args: Namespace):
     '''Import users and projects from the OpenStack API'''
     resp = api_request('get', '/user/import/', None, args)
+    print_response(resp, args)
+
+
+def user_me(args: Namespace):
+    '''show your own user'''
+    resp = api_request('get', f'/user/me/', None, args)
     print_response(resp, args)
 
 
