@@ -45,6 +45,20 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List flavors",
             )
+    flavor_list_filter_group = \
+        flavor_list_parser.add_mutually_exclusive_group()
+    flavor_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all flavors",
+    )
+    flavor_list_filter_group.add_argument(
+        "-g",
+        "--group",
+        type=str,
+        help="List flavors of the flavor group specified by name or ID",
+    )
 
     # flavor show parser
     flavor_show_parser: ArgumentParser = \
@@ -145,6 +159,14 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List flavors",
             )
+    flavor_group_list_filter_group = \
+        flavor_group_list_parser.add_mutually_exclusive_group()
+    flavor_group_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all flavors",
+    )
 
     # flavor group show parser
     flavor_group_show_parser: ArgumentParser = \
@@ -225,7 +247,12 @@ def parse_args(args: Namespace):
 
 def flavor_list(args: Namespace):
     '''list flavors'''
-    resp = api_request('get', '/resources/flavors/', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    elif args.group:
+        params += f"?flavorgroup={args.group}"
+    resp = api_request('get', f'/resources/flavors/{params}', None, args)
     print_response(resp, args)
 
 
@@ -278,7 +305,10 @@ def flavor_import(args: Namespace):
 
 def flavor_group_list(args: Namespace):
     '''list flavors'''
-    resp = api_request('get', '/resources/flavorgroups', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    resp = api_request('get', f'/resources/flavorgroups/{params}', None, args)
     print_response(resp, args)
 
 
