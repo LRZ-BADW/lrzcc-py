@@ -159,6 +159,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "usage",
             help="List the flavor usage",
             )
+    flavor_usage_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List flavor usage for all users",
+    )
 
     # flavor group list parser
     flavor_group_list_parser: ArgumentParser = \
@@ -242,6 +248,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "usage",
             help="List the flavor group usage",
             )
+    flavor_group_usage_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List flavor group usage for all users",
+    )
 
     # avoid variable not used warnings
     do_nothing(flavor_import_parser)
@@ -319,7 +331,10 @@ def flavor_import(args: Namespace):
 
 def flavor_usage(args: Namespace):
     '''list the flavor usage'''
-    resp = api_request('get', '/resources/flavors/usage/', None, args)
+    params = ""
+    if args.all:
+        params += "?all=True"
+    resp = api_request('get', f'/resources/flavors/usage/{params}', None, args)
     print_response(resp, args)
 
 
@@ -375,6 +390,9 @@ def flavor_group_initialize(args: Namespace):
 
 def flavor_group_usage(args: Namespace):
     '''list the flavor group usage'''
-    resp = api_request('get', '/resources/flavorgroups/usage/', None,
+    params = ""
+    if args.all:
+        params += "?all=True"
+    resp = api_request('get', f'/resources/flavorgroups/usage/{params}', None,
                        args)
     print_response(resp, args)
