@@ -153,6 +153,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Import flavors from OpenStack API",
             )
 
+    # flavor usage parser
+    flavor_usage_parser: ArgumentParser = \
+        flavor_subparsers.add_parser(
+            "usage",
+            help="List the flavor usage",
+            )
+
     # flavor group list parser
     flavor_group_list_parser: ArgumentParser = \
         flavor_group_subparsers.add_parser(
@@ -222,18 +229,25 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="New name for the flavor group",
     )
 
-    # flavor group modify parser
+    # flavor group initialize parser
     flavor_group_initialize_parser: ArgumentParser = \
         flavor_group_subparsers.add_parser(
             "initialize",
             help="Initialize the default flavor groups",
             )
 
+    # flavor group usage parser
+    flavor_group_usage_parser: ArgumentParser = \
+        flavor_group_subparsers.add_parser(
+            "usage",
+            help="List the flavor group usage",
+            )
+
     # avoid variable not used warnings
-    do_nothing(flavor_list_parser)
     do_nothing(flavor_import_parser)
-    do_nothing(flavor_group_list_parser)
+    do_nothing(flavor_usage_parser)
     do_nothing(flavor_group_initialize_parser)
+    do_nothing(flavor_group_usage_parser)
 
     return parsers
 
@@ -303,6 +317,12 @@ def flavor_import(args: Namespace):
     print_response(resp, args)
 
 
+def flavor_usage(args: Namespace):
+    '''list the flavor usage'''
+    resp = api_request('get', '/resources/flavors/usage/', None, args)
+    print_response(resp, args)
+
+
 def flavor_group_list(args: Namespace):
     '''list flavors'''
     params = ""
@@ -349,5 +369,12 @@ def flavor_group_delete(args: Namespace):
 def flavor_group_initialize(args: Namespace):
     '''initialize the default flavor groups'''
     resp = api_request('get', '/resources/flavorgroups/initialize/', None,
+                       args)
+    print_response(resp, args)
+
+
+def flavor_group_usage(args: Namespace):
+    '''list the flavor group usage'''
+    resp = api_request('get', '/resources/flavorgroups/usage/', None,
                        args)
     print_response(resp, args)
