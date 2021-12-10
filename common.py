@@ -78,8 +78,17 @@ list_paths = {
 }
 
 
+def is_staff(args: Namespace):
+    resp = api_request('get', '/user/me/', None, args)
+    user = resp.json()
+    return user['is_staff']
+
+
 def api_list(entity: str, args: Namespace):
-    path = list_paths[entity]
+    params = ''
+    if is_staff(args):
+        params += '?all=True'
+    path = f'{list_paths[entity]}{params}'
     resp = api_request('get', path, None, args)
     return resp.json()
 
