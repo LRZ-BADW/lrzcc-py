@@ -3,7 +3,8 @@ from datetime import datetime
 import sys
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor, parse_flavor_group, generate_modify_data)
+                    parse_flavor, parse_flavor_group, generate_modify_data,
+                    parse_user, parse_project)
 
 cmds = ['flavor', 'flavor-group']
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
@@ -159,11 +160,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "usage",
             help="List the flavor usage",
             )
-    flavor_usage_parser.add_argument(
+    flavor_usage_filter_group = \
+        flavor_usage_parser.add_mutually_exclusive_group()
+    flavor_usage_filter_group.add_argument(
         "-a",
         "--all",
         action="store_true",
         help="List flavor usage for all users",
+    )
+    flavor_usage_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List flavor usage for user specified by name or ID",
+    )
+    flavor_usage_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List flavor usage for the users of the project specified by " +
+             "name or ID",
+    )
+    flavor_usage_parser.add_argument(
+        "-A",
+        "--aggregate",
+        action="store_true",
+        help="Aggregate the flavor usage for all filtered users",
     )
 
     # flavor group list parser
@@ -248,18 +270,37 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "usage",
             help="List the flavor group usage",
             )
-    flavor_group_usage_parser.add_argument(
+    flavor_group_usage_filter_group = \
+        flavor_group_usage_parser.add_mutually_exclusive_group()
+    flavor_group_usage_filter_group.add_argument(
         "-a",
         "--all",
         action="store_true",
         help="List flavor group usage for all users",
     )
+    flavor_group_usage_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List flavor group usage for user specified by name or ID",
+    )
+    flavor_group_usage_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List flavor group usage for users of the project specified by" +
+             " name or ID",
+    )
+    flavor_group_usage_parser.add_argument(
+        "-A",
+        "--aggregate",
+        action="store_true",
+        help="Aggregate the flavor usage for all filtered users",
+    )
 
     # avoid variable not used warnings
     do_nothing(flavor_import_parser)
-    do_nothing(flavor_usage_parser)
     do_nothing(flavor_group_initialize_parser)
-    do_nothing(flavor_group_usage_parser)
 
     return parsers
 
@@ -269,6 +310,8 @@ def parse_args(args: Namespace):
 
     parse_flavor(args)
     parse_flavor_group(args)
+    parse_user(args)
+    parse_project(args)
 
 
 def flavor_list(args: Namespace):
@@ -333,7 +376,15 @@ def flavor_usage(args: Namespace):
     '''list the flavor usage'''
     params = ""
     if args.all:
-        params += "?all=True"
+        params += "&all=True"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if args.aggregate:
+        params += "&aggregate=True"
+    if params:
+        params = '?' + params[1:]
     resp = api_request('get', f'/resources/flavors/usage/{params}', None, args)
     print_response(resp, args)
 
@@ -392,7 +443,15 @@ def flavor_group_usage(args: Namespace):
     '''list the flavor group usage'''
     params = ""
     if args.all:
-        params += "?all=True"
+        params += "&all=True"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if args.aggregate:
+        params += "&aggregate=True"
+    if params:
+        params = '?' + params[1:]
     resp = api_request('get', f'/resources/flavorgroups/usage/{params}', None,
                        args)
     print_response(resp, args)
