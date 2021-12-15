@@ -12,6 +12,8 @@ import pricing
 import accounting
 import quota
 import resources
+from common import issue_api_token
+
 
 THISMODULE = sys.modules[__name__]
 DESCRIPTION = 'client program for the LRZ Compute Cloud budgeting system'
@@ -160,11 +162,32 @@ def parse_args():
         # The token string may contain \r and \n
         # We need to rstrip() the string to get rid of these characters
         args.token = args.token.rstrip()
-    else:
-        print(f"{sys.argv[0]}: error: no Openstack token given. "
-              "Use -t/--token or the environment variable OS_TOKEN.",
-              file=sys.stderr)
-        exit(1)
+    if not args.token:
+        keystone_url = os.getenv('OS_AUTH_URL')
+        username = os.getenv('OS_USERNAME')
+        password = os.getenv('OS_PASSWORD')
+        user_domain_name = os.getenv('OS_USER_DOMAIN_NAME')
+        project_name = os.getenv('OS_PROJECT_NAME')
+        project_domain_id = os.getenv('OS_PROJECT_DOMAIN_ID')
+        if (keystone_url and username and password and user_domain_name
+                and project_name and project_domain_id):
+            args.token = issue_api_token(keystone_url, username, password,
+                                         user_domain_name, project_name,
+                                         project_domain_id)
+            if not args.token:
+                print(f"{sys.argv[0]}: error: the Openstack authentication "
+                      "with the provided credentials failed. Unable to "
+                      "acquire a token. Please make sure the openrc file "
+                      "you sourced is correct.",
+                      file=sys.stderr)
+                exit(1)
+            os.environ['OS_TOKEN'] = args.token
+        else:
+            print(f"{sys.argv[0]}: error: no Openstack token or login "
+                  "credentials given. Source your openrc file, use -t/--token "
+                  "or the environment variable OS_TOKEN.",
+                  file=sys.stderr)
+            exit(1)
 
     # check that --names and --ids are not both given
     if args.names and args.ids:

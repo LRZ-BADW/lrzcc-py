@@ -1,5 +1,6 @@
 import tabulate
 import requests
+from http import HTTPStatus
 import json
 from datetime import datetime
 from argparse import ArgumentError, Namespace
@@ -163,3 +164,36 @@ def generate_modify_data(args: Namespace, fields):
         if f'no{argname}' in args and args.__dict__[f'no{argname}']:
             data[fieldname] = None
     return data
+
+
+def issue_api_token(keystone_url, username, password, user_domain_name,
+                    project_name, project_domain_id):
+    url = keystone_url + '/auth/tokens/'
+    headers = {'Content-Type': 'application/json'}
+    data = {
+        'auth': {
+            'identity': {
+                'methods': ['password'],
+                'password': {
+                    'user': {
+                        'name': username,
+                        'domain': {'name': user_domain_name},
+                        'password': password,
+                    }
+                }
+            },
+            'scope': {
+                'project': {
+                    'name': project_name,
+                    'domain': {'id': project_domain_id}
+                }
+            }
+        }
+    }
+
+    resp = requests.post(url, headers=headers, json=data)
+
+    if resp.status_code != HTTPStatus.CREATED:
+        return None
+
+    return resp.headers['X-Subject-Token']
