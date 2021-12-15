@@ -197,3 +197,19 @@ def issue_api_token(keystone_url, username, password, user_domain_name,
         return None
 
     return resp.headers['X-Subject-Token']
+
+
+def revoke_api_token(keystone_url, token):
+    url = keystone_url + '/auth/tokens/'
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': token,
+        'X-Subject-Token': token,
+    }
+
+    resp = requests.delete(url, headers=headers)
+
+    if resp.status_code != HTTPStatus.NO_CONTENT:
+        return False
+
+    return True

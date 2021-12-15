@@ -12,7 +12,7 @@ import pricing
 import accounting
 import quota
 import resources
-from common import issue_api_token
+from common import issue_api_token, revoke_api_token
 
 
 THISMODULE = sys.modules[__name__]
@@ -30,6 +30,8 @@ cmds_with_sub_cmds = []
 args = None
 
 token = None
+token_issued = False
+keystone_url = None
 
 module = None
 
@@ -163,6 +165,8 @@ def parse_args():
         # We need to rstrip() the string to get rid of these characters
         args.token = args.token.rstrip()
     if not args.token:
+        global token_issued
+        global keystone_url
         keystone_url = os.getenv('OS_AUTH_URL')
         username = os.getenv('OS_USERNAME')
         password = os.getenv('OS_PASSWORD')
@@ -181,7 +185,7 @@ def parse_args():
                       "you sourced is correct.",
                       file=sys.stderr)
                 exit(1)
-            os.environ['OS_TOKEN'] = args.token
+            token_issued = True
         else:
             print(f"{sys.argv[0]}: error: no Openstack token or login "
                   "credentials given. Source your openrc file, use -t/--token "
@@ -218,11 +222,23 @@ def execute_command():
     function(args)
 
 
+def clean_up():
+    '''clean up afterwards'''
+    if token_issued:
+        revoked = revoke_api_token(keystone_url, args.token)
+        if not revoked:
+            print(f"{sys.argv[0]}: error: token could not be revoked. Please "
+                  f" revoke the following token manually: {args.token}",
+                  file=sys.stderr)
+            exit(1)
+
+
 def main():
     '''the main method'''
     setup_parsers()
     parse_args()
     execute_command()
+    clean_up()
 
 
 if __name__ == "__main__":
