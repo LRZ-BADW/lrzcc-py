@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from argparse import ArgumentError, Namespace
 import sys
-from pydoc import locate
+# from pydoc import locate
 
 
 def do_nothing(variable):
@@ -46,6 +46,20 @@ def valid_datetime(string):
     except ValueError:
         msg = f"Not a valid datetime: {string}"
         raise ArgumentError(msg)
+
+
+def valid_positive_integer(string):
+    try:
+        integer = int(string)
+    except ValueError:
+        msg = f"Not a valid positive integer: {string}"
+        raise ArgumentError(msg)
+
+    if integer <= 0:
+        msg = f"Not a valid positive integer: {string}"
+        raise ArgumentError(msg)
+
+    return integer
 
 
 def valid_flavor(string):
@@ -128,7 +142,8 @@ def search_user(string: str, args: Namespace):
     return search_entity('user', string, args)
 
 
-def parse_entity(entity: str, args: Namespace, argname: str = None):
+def parse_entity(entity: str, args: Namespace, argname: str = None,
+                 get_name=False):
     if not argname:
         argname = entity
     if argname in args and args.__dict__[argname]:
@@ -137,23 +152,26 @@ def parse_entity(entity: str, args: Namespace, argname: str = None):
             print(f'{sys.argv[0]}: error: not a valid {entity}: ' +
                   f'{args.__dict__[argname]}', file=sys.stderr)
             exit(1)
-        args.__dict__[argname] = obj['id']
+        if get_name:
+            args.__dict__[argname] = obj['name']
+        else:
+            args.__dict__[argname] = obj['id']
 
 
-def parse_flavor(args: Namespace, argname='flavor'):
-    parse_entity('flavor', args, argname)
+def parse_flavor(args: Namespace, argname='flavor', get_name=False):
+    parse_entity('flavor', args, argname, get_name)
 
 
-def parse_flavor_group(args: Namespace, argname='group'):
-    parse_entity('flavor_group', args, argname)
+def parse_flavor_group(args: Namespace, argname='group', get_name=False):
+    parse_entity('flavor_group', args, argname, get_name)
 
 
-def parse_project(args: Namespace):
-    parse_entity('project', args)
+def parse_project(args: Namespace, get_name=False):
+    parse_entity('project', args, get_name)
 
 
-def parse_user(args: Namespace):
-    parse_entity('user', args)
+def parse_user(args: Namespace, get_name=False):
+    parse_entity('user', args, get_name)
 
 
 def generate_modify_data(args: Namespace, fields):

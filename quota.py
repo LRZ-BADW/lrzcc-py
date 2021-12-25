@@ -1,7 +1,8 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
-from common import (do_nothing, print_response, api_request,
-                    parse_flavor_group, parse_user, generate_modify_data)
+from common import (do_nothing, print_response, api_request, parse_flavor,
+                    parse_flavor_group, parse_user, generate_modify_data,
+                    valid_positive_integer)
 
 
 cmds = ['flavor-quota']
@@ -119,6 +120,31 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="New quota value",
     )
 
+    # flavor quota check parser
+    flavor_quota_check_parser: ArgumentParser = \
+        flavor_quota_subparsers.add_parser(
+            "check",
+            help="""Check if a user remains under the flavor quota, when a
+            given count of the given flavor is added.""",
+            )
+    flavor_quota_check_parser.add_argument(
+        "user",
+        type=str,
+        help="User name or ID",
+    )
+    flavor_quota_check_parser.add_argument(
+        "flavor",
+        type=str,
+        help="Flavor name or ID",
+    )
+    flavor_quota_check_parser.add_argument(
+        "-c",
+        "--count",
+        type=valid_positive_integer,
+        default=1,
+        help="Count of the flavor",
+    )
+
     # avoid variable not used warnings
     do_nothing(flavor_quota_list_parser)
 
@@ -129,7 +155,12 @@ def parse_args(args: Namespace):
     '''do custom command line argument checks'''
 
     parse_flavor_group(args, 'flavorgroup')
-    parse_user(args)
+    if args.command == 'flavor-quota' and args.sub_command == 'check':
+        parse_user(args, get_name=True)
+        parse_flavor(args, get_name=True)
+    else:
+        parse_user(args)
+        parse_flavor(args)
 
 
 def flavor_quota_list(args: Namespace):
@@ -176,4 +207,13 @@ def flavor_quota_modify(args: Namespace):
 def flavor_quota_delete(args: Namespace):
     '''delete the flavor quota with the given id'''
     resp = api_request('delete', f'/quota/flavorquotas/{args.id}', None, args)
+    print_response(resp, args)
+
+
+def flavor_quota_check(args: Namespace):
+    '''check if user remains under flavor quota'''
+    params = f"?username={args.user}&flavorname={args.flavor}" + \
+        f"&flavorcount={args.count}"
+    url = f"/quota/flavorquotas/check{params}"
+    resp = api_request('get', url, None, args)
     print_response(resp, args)
