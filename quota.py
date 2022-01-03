@@ -155,12 +155,8 @@ def parse_args(args: Namespace):
     '''do custom command line argument checks'''
 
     parse_flavor_group(args, 'flavorgroup')
-    if args.command == 'flavor-quota' and args.sub_command == 'check':
-        parse_user(args, get_name=True)
-        parse_flavor(args, get_name=True)
-    else:
-        parse_user(args)
-        parse_flavor(args)
+    parse_user(args)
+    parse_flavor(args)
 
 
 def flavor_quota_list(args: Namespace):
@@ -212,7 +208,7 @@ def flavor_quota_delete(args: Namespace):
 
 def flavor_quota_check(args: Namespace):
     '''check if user remains under flavor quota'''
-    params = f"?username={args.user}&flavorname={args.flavor}" + \
+    params = f"?user={args.user}&flavor={args.flavor}" + \
         f"&flavorcount={args.count}"
     url = f"/quota/flavorquotas/check{params}"
     resp = api_request('get', url, None, args)
