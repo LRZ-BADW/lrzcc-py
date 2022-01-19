@@ -192,6 +192,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "import",
             help="Import users and projects from OpenStack API",
             )
+    user_import_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        default=False,
+        help="Don't print anything, when nothing is imported",
+    )
 
     # user me parser
     user_me_parser: ArgumentParser = \
@@ -293,7 +300,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 
     # avoid variable not used warnings
     do_nothing(user_list_parser)
-    do_nothing(user_import_parser)
     do_nothing(user_me_parser)
     do_nothing(project_list_parser)
 
@@ -360,6 +366,16 @@ def user_delete(args: Namespace):
 def user_import(args: Namespace):
     '''Import users and projects from the OpenStack API'''
     resp = api_request('get', '/user/import/', None, args)
+    resp_json = resp.json()
+    if (
+        args.quiet
+        and not
+        ('new_user_count' in resp_json and resp_json['new_user_count'])
+        and not
+        ('new_project_count' in resp_json
+         and resp_json['new_project_count'])
+    ):
+        return
     print_response(resp, args)
 
 
