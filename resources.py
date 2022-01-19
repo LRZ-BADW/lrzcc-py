@@ -153,6 +153,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "import",
             help="Import flavors from OpenStack API",
             )
+    flavor_import_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        default=False,
+        help="Don't print anything, when nothing is imported",
+    )
 
     # flavor usage parser
     flavor_usage_parser: ArgumentParser = \
@@ -299,7 +306,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
 
     # avoid variable not used warnings
-    do_nothing(flavor_import_parser)
     do_nothing(flavor_group_initialize_parser)
 
     return parsers
@@ -369,6 +375,13 @@ def flavor_delete(args: Namespace):
 def flavor_import(args: Namespace):
     '''import all the flavors from the OpenStack API'''
     resp = api_request('get', '/resources/flavors/import/', None, args)
+    resp_json = resp.json()
+    if (
+        args.quiet
+        and not
+        ('new_flavor_count' in resp_json and resp_json['new_flavor_count'])
+    ):
+        return
     print_response(resp, args)
 
 
