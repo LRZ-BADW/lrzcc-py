@@ -199,6 +199,20 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the server action',
         )
 
+    # server action import parser
+    server_action_import_parser: ArgumentParser = \
+        server_action_subparsers.add_parser(
+            "import",
+            help="Import server actions from OpenStack database",
+            )
+    server_action_import_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        default=False,
+        help="Don't print anything, when nothing is imported",
+    )
+
     # avoid variable not used warnings
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
@@ -277,4 +291,18 @@ def server_action_delete(args: Namespace):
     '''delete the server action with the given id'''
     resp = api_request('delete', f'/accounting/serveractions/{args.id}', None,
                        args)
+    print_response(resp, args)
+
+
+def server_action_import(args: Namespace):
+    '''import all the server actions from the OpenStack database'''
+    resp = api_request('get', '/accounting/serveractions/import/', None, args)
+    resp_json = resp.json()
+    if (
+        args.quiet
+        and not
+        ('new_server_action_count' in resp_json
+         and resp_json['new_server_action_count'])
+    ):
+        return
     print_response(resp, args)
