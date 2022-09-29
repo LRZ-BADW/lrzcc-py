@@ -30,6 +30,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List server actions",
             )
+    server_action_list_filter_group = \
+        server_action_list_parser.add_mutually_exclusive_group()
+    server_action_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all server actions",
+    )
+    server_action_list_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="List server actions for the server with the given UUID",
+    )
+    server_action_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List server actions for the user with the given name or ID",
+    )
+    server_action_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List server actions for the project with the given name or ID",
+    )
 
     # server action show parser
     server_action_show_parser: ArgumentParser = \
@@ -223,10 +249,8 @@ def setup_parsers(main_subparsers: _SubParsersAction):
 def parse_args(args: Namespace):
     '''do custom command line argument checks'''
 
-    # TODO parse these too? maybe problematic when lrz user id is reused for
-    #      different user
-    # parse_user(args)
-    # parse_project(args)
+    parse_user(args)
+    parse_project(args)
 
     # TODO this is not very efficient, because it's going to make the same
     #      API request three times, so we should change the parse functions
@@ -238,7 +262,17 @@ def parse_args(args: Namespace):
 
 def server_action_list(args: Namespace):
     '''list server actions'''
-    resp = api_request('get', '/accounting/serveractions', None, args)
+    params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.server:
+        params += f'?server={args.server}'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
+    resp = api_request('get', f'/accounting/serveractions/{params}',
+                       None, args)
     print_response(resp, args)
 
 
