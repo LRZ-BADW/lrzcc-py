@@ -215,7 +215,7 @@ def execute_command():
         print(args)
 
     function_name = args.command.replace('-', '_')
-    if args.sub_command:
+    if 'sub_command' in args and args.sub_command:
         function_name += f'_{args.sub_command}'
     if hasattr(module, function_name):
         function = getattr(module, function_name)
