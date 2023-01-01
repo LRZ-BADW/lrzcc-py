@@ -133,7 +133,7 @@ def flavor_price_create(args: Namespace):
     '''create a flavor price'''
     data = {
         "flavor": args.flavor,
-        "user_class": args.user_class,
+        "user_class": args.userclass,
         "unit_price": args.price,
         "start_time": args.start_time,
     }
