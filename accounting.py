@@ -39,6 +39,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all server actions",
     )
     server_action_list_filter_group.add_argument(
+        # TODO we could validate that this is UUIDv4
         "-s",
         "--server",
         type=str,
