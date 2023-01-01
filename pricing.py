@@ -75,7 +75,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "--start-time",
         type=valid_datetime,
         help="Datetime at which this price starts in ISO-8601 format, "
-             "so for example 2021-11-09Z12:30:00T "
+             "so for example 2021-11-09T12:30:00Z "
              "(default: now)",
         default=datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
