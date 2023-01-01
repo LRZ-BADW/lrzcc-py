@@ -18,7 +18,9 @@ def print_response(resp, args):
     '''print an API response'''
     if not resp.content:
         return
-    if type(resp.json()) == list:
+    if args.format == 'json':
+        output = json.dumps(resp.json())
+    elif type(resp.json()) == list:
         headers = {}
         if resp.json():
             headers = {key: key for key in resp.json()[0].keys()}
