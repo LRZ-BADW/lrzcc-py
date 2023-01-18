@@ -8,5 +8,6 @@
     "tablefmt",
     "xhuge",
     "xlarge"
-  ]
+  ],
+  "cSpell.enabled": true
 }

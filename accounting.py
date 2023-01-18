@@ -4,7 +4,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor)
 
 
-cmds = ['server-action']
+cmds = ['server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-action']
 
 
@@ -39,6 +39,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all server actions",
     )
     server_action_list_filter_group.add_argument(
+        # TODO we could validate that this is UUIDv4
         "-s",
         "--server",
         type=str,
@@ -239,6 +240,61 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Don't print anything, when nothing is imported",
     )
 
+    # flavor consumption parser
+    flavor_consumption_parser: ArgumentParser = \
+        main_subparsers.add_parser(
+            "flavor-consumption",
+            help="Calculate flavor consumption over time",
+            )
+    flavor_consumption_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help="Begin of the period to calculate the consumption for " +
+             "(default: beginning of the running year)",
+    )
+    flavor_consumption_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="End of the period to calculate the consumption for " +
+             "(default: now)",
+    )
+    # TODO this is not implemented yet, so we take it out for now
+    # flavor_consumption_parser.add_argument(
+    #     "-d",
+    #     "--detail",
+    #     action="store_true",
+    #     help="Also retrieve the detailed consumption log",
+    # )
+    flavor_consumption_filter_group = \
+        flavor_consumption_parser.add_mutually_exclusive_group()
+    flavor_consumption_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Calculate flavor consumption for all users",
+    )
+    flavor_consumption_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="Calculate flavor consumption for server with specified UUID",
+    )
+    flavor_consumption_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Calculate flavor consumption for user specified by name or ID",
+    )
+    flavor_consumption_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Calculate flavor consumption for the users of the project " +
+             "specified by name or ID",
+    )
+
     # avoid variable not used warnings
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
@@ -340,3 +396,30 @@ def server_action_import(args: Namespace):
     ):
         return
     print_response(resp, args)
+
+
+def flavor_consumption(args: Namespace):
+    '''Calculate the flavor consumption'''
+    params = ""
+    if args.begin:
+        params += f"&begin={args.begin}"
+    if args.end:
+        params += f"&end={args.end}"
+    # TODO this is not implemented yet so we take it out for now
+    # if args.detail:
+    #     params += "&detail=True"
+    if args.all:
+        params += "&all=True"
+    elif args.server:
+        params += f"&server={args.server}"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/flavorconsumption/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
