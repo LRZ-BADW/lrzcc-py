@@ -18,7 +18,9 @@ def print_response(resp, args):
     '''print an API response'''
     if not resp.content:
         return
-    if type(resp.json()) == list:
+    if args.format == 'json':
+        output = json.dumps(resp.json())
+    elif type(resp.json()) == list:
         headers = {}
         if resp.json():
             headers = {key: key for key in resp.json()[0].keys()}
@@ -42,7 +44,8 @@ def api_request(method, path, data, args):
 
 def valid_datetime(string):
     try:
-        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%SZ")
+        datetime.strptime(string, "%Y-%m-%dT%H:%M:%SZ")
+        return string
     except ValueError:
         msg = f"Not a valid datetime: {string}"
         raise ArgumentError(msg)
