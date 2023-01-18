@@ -250,19 +250,15 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-b",
         "--begin",
         type=valid_datetime,
-        help="Begin of the period to calculate the consumption for",
+        help="Begin of the period to calculate the consumption for " +
+             "(default: beginning of the running year)",
     )
     flavor_consumption_parser.add_argument(
         "-e",
         "--end",
         type=valid_datetime,
-        help="End of the period to calculate the consumption for",
-    )
-    flavor_consumption_parser.add_argument(
-        "-d",
-        "--detail",
-        action="store_true",
-        help="Also retrieve the detailed consumption log",
+        help="End of the period to calculate the consumption for " +
+             "(default: now)",
     )
     # TODO this is not implemented yet, so we take it out for now
     # flavor_consumption_parser.add_argument(
