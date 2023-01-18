@@ -264,6 +264,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         action="store_true",
         help="Also retrieve the detailed consumption log",
     )
+    # TODO this is not implemented yet, so we take it out for now
+    # flavor_consumption_parser.add_argument(
+    #     "-d",
+    #     "--detail",
+    #     action="store_true",
+    #     help="Also retrieve the detailed consumption log",
+    # )
     flavor_consumption_filter_group = \
         flavor_consumption_parser.add_mutually_exclusive_group()
     flavor_consumption_filter_group.add_argument(
@@ -402,8 +409,9 @@ def flavor_consumption(args: Namespace):
         params += f"&begin={args.begin}"
     if args.end:
         params += f"&end={args.end}"
-    if args.detail:
-        params += "&detail=True"
+    # TODO this is not implemented yet so we take it out for now
+    # if args.detail:
+    #     params += "&detail=True"
     if args.all:
         params += "&all=True"
     elif args.server:
