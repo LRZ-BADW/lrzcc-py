@@ -392,7 +392,13 @@ def server_action_delete(args: Namespace):
 
 def server_action_import(args: Namespace):
     '''import all the server actions from the OpenStack database'''
-    resp = api_request('get', '/accounting/serveractions/import/', None, args)
+    params = ""
+    if args.limit:
+        params = f"&limit={args.limit}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/serveractions/import/{params}',
+                       None, args)
     resp_json = resp.json()
     if (
         args.quiet
