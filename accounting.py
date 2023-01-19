@@ -233,6 +233,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Import server actions from OpenStack database",
             )
     server_action_import_parser.add_argument(
+        "-l",
+        "--limit",
+        type=int,
+        help="Limit the number of actions imported (default: 0, no limit)",
+    )
+    server_action_import_parser.add_argument(
         "-q",
         "--quiet",
         action="store_true",
@@ -386,7 +392,13 @@ def server_action_delete(args: Namespace):
 
 def server_action_import(args: Namespace):
     '''import all the server actions from the OpenStack database'''
-    resp = api_request('get', '/accounting/serveractions/import/', None, args)
+    params = ""
+    if args.limit:
+        params = f"&limit={args.limit}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/serveractions/import/{params}',
+                       None, args)
     resp_json = resp.json()
     if (
         args.quiet
