@@ -233,6 +233,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Import server actions from OpenStack database",
             )
     server_action_import_parser.add_argument(
+        "-l",
+        "--limit",
+        type=int,
+        help="Limit the number of actions imported (default: 0, no limit)",
+    )
+    server_action_import_parser.add_argument(
         "-q",
         "--quiet",
         action="store_true",
