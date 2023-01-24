@@ -107,6 +107,8 @@ def api_list(entity: str, args: Namespace):
     me = get_me(args)
     if me['is_staff']:
         params += '?all=True'
+    elif entity == 'user' and me['role'] == 2:
+        params += f"?project={me['project']['id']}"
     path = f'{list_paths[entity]}{params}'
     resp = api_request('get', path, None, args)
     return resp.json()
