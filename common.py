@@ -96,16 +96,19 @@ list_paths = {
 }
 
 
-def is_staff(args: Namespace):
+def get_me(args: Namespace):
     resp = api_request('get', '/user/me/', None, args)
     user = resp.json()
-    return user['is_staff']
+    return user
 
 
 def api_list(entity: str, args: Namespace):
     params = ''
-    if is_staff(args):
+    me = get_me(args)
+    if me['is_staff']:
         params += '?all=True'
+    elif entity == 'user' and me['role'] == 2:
+        params += f"?project={me['project']['id']}"
     path = f'{list_paths[entity]}{params}'
     resp = api_request('get', path, None, args)
     return resp.json()
