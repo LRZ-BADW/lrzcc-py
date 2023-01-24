@@ -96,10 +96,10 @@ list_paths = {
 }
 
 
-def is_staff(args: Namespace):
+def get_me(args: Namespace):
     resp = api_request('get', '/user/me/', None, args)
     user = resp.json()
-    return user['is_staff']
+    return user
 
 
 def api_list(entity: str, args: Namespace):
