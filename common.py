@@ -104,7 +104,8 @@ def get_me(args: Namespace):
 
 def api_list(entity: str, args: Namespace):
     params = ''
-    if is_staff(args):
+    me = get_me(args)
+    if me['is_staff']:
         params += '?all=True'
     path = f'{list_paths[entity]}{params}'
     resp = api_request('get', path, None, args)
