@@ -4,13 +4,59 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor)
 
 
-cmds = ['server-action', 'flavor-consumption']
-cmds_with_sub_cmds = ['server-action']
+cmds = ['server-state', 'server-action', 'flavor-consumption']
+cmds_with_sub_cmds = ['server-state', 'server-action']
 
 
 def setup_parsers(main_subparsers: _SubParsersAction):
     '''setup the accounting parser'''
     parsers = {}
+
+    # server state parser
+    server_state_parser: ArgumentParser = main_subparsers.add_parser(
+        "server-state",
+        help="server state commands",
+        )
+    parsers['server-state'] = server_state_parser
+    server_state_subparsers: _SubParsersAction = \
+        server_state_parser.add_subparsers(
+            help="sub-commands",
+            dest="sub_command",
+            )
+
+    # server state list parser
+    server_state_list_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "list",
+            help="List server states",
+            )
+    server_state_list_filter_group = \
+        server_state_list_parser.add_mutually_exclusive_group()
+    server_state_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all server states",
+    )
+    server_state_list_filter_group.add_argument(
+        # TODO we could validate that this is UUIDv4
+        "-s",
+        "--server",
+        type=str,
+        help="List server states for the server with the given UUID",
+    )
+    server_state_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List server states for the user with the given name or ID",
+    )
+    server_state_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List server states for the project with the given name or ID",
+    )
 
     # server action parser
     server_action_parser: ArgumentParser = main_subparsers.add_parser(
@@ -320,6 +366,22 @@ def parse_args(args: Namespace):
     parse_flavor(args)
     parse_flavor(args, 'flavor_new')
     parse_flavor(args, 'flavor_old')
+
+
+def server_state_list(args: Namespace):
+    '''list server states'''
+    params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.server:
+        params += f'?server={args.server}'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
+    resp = api_request('get', f'/accounting/serverstates/{params}',
+                       None, args)
+    print_response(resp, args)
 
 
 def server_action_list(args: Namespace):
