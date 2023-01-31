@@ -58,6 +58,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List server states for the project with the given name or ID",
     )
 
+    # server state import parser
+    server_state_import_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "import",
+            help="Import server states from OpenStack API",
+            )
+
     # server action parser
     server_action_parser: ArgumentParser = main_subparsers.add_parser(
         "server-action",
@@ -348,6 +355,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
 
     # avoid variable not used warnings
+    do_nothing(server_state_import_parser)
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
 
@@ -380,6 +388,14 @@ def server_state_list(args: Namespace):
     elif args.project:
         params += f'?project={args.project}'
     resp = api_request('get', f'/accounting/serverstates/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_state_import(args: Namespace):
+    '''import server states from OpenStack API'''
+    params = ""
+    resp = api_request('get', f'/accounting/serverstates/import/{params}',
                        None, args)
     print_response(resp, args)
 
