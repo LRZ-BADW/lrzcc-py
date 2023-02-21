@@ -58,6 +58,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List server states for the project with the given name or ID",
     )
 
+    # server state delete parser
+    server_state_delete_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "delete",
+            help="Delete a server state",
+            )
+    server_state_delete_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the server state',
+        )
+
     # server state import parser
     server_state_import_parser: ArgumentParser = \
         server_state_subparsers.add_parser(
@@ -388,6 +400,13 @@ def server_state_list(args: Namespace):
     elif args.project:
         params += f'?project={args.project}'
     resp = api_request('get', f'/accounting/serverstates/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_state_delete(args: Namespace):
+    '''delete the server state with the given id'''
+    resp = api_request('delete', f'/accounting/serverstates/{args.id}',
                        None, args)
     print_response(resp, args)
 
