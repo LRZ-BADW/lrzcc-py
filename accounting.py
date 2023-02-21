@@ -1,16 +1,162 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_user, parse_project, parse_flavor)
+                    parse_user, parse_project, parse_flavor,
+                    ask_for_confirmation)
 
 
-cmds = ['server-action', 'flavor-consumption']
-cmds_with_sub_cmds = ['server-action']
+cmds = ['server-state', 'server-action', 'flavor-consumption']
+cmds_with_sub_cmds = ['server-state', 'server-action']
+dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
+                  'server-action': ['create', 'modify', 'delete'],
+                  }
 
 
 def setup_parsers(main_subparsers: _SubParsersAction):
     '''setup the accounting parser'''
     parsers = {}
+
+    # server state parser
+    server_state_parser: ArgumentParser = main_subparsers.add_parser(
+        "server-state",
+        help="server state commands",
+        )
+    parsers['server-state'] = server_state_parser
+    server_state_subparsers: _SubParsersAction = \
+        server_state_parser.add_subparsers(
+            help="sub-commands",
+            dest="sub_command",
+            )
+
+    # server state list parser
+    server_state_list_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "list",
+            help="List server states",
+            )
+    server_state_list_filter_group = \
+        server_state_list_parser.add_mutually_exclusive_group()
+    server_state_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all server states",
+    )
+    server_state_list_filter_group.add_argument(
+        # TODO we could validate that this is UUIDv4
+        "-s",
+        "--server",
+        type=str,
+        help="List server states for the server with the given UUID",
+    )
+    server_state_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List server states for the user with the given name or ID",
+    )
+    server_state_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List server states for the project with the given name or ID",
+    )
+
+    # server state show parser
+    server_state_show_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "show",
+            help="Show a server state",
+            )
+    server_state_show_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the server state',
+        )
+
+    # server state create parser
+    server_state_create_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "create",
+            help="Create a server state",
+            )
+    server_state_create_parser.add_argument(
+        "begin",
+        type=valid_datetime,
+        help='Begin time of the server state',
+        )
+    server_state_create_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the server state',
+        )
+    server_state_create_parser.add_argument(
+        "instance_id",
+        type=str,
+        help='UUID of the instance',
+        )
+    server_state_create_parser.add_argument(
+        "instance_name",
+        type=str,
+        help='Name of the instance',
+        )
+    server_state_create_parser.add_argument(
+        "flavor",
+        type=str,
+        help='Name or ID of the flavor of the server',
+        )
+    server_state_create_parser.add_argument(
+        "status",
+        type=str,
+        choices=[
+            'ACTIVE',
+            'BUILD',
+            'DELETED',
+            'ERROR',
+            'HARD_REBOOT',
+            'MIGRATING',
+            'PASSWORD',
+            'PAUSED',
+            'REBOOT',
+            'REBUILD',
+            'RESCUE',
+            'RESIZE',
+            'REVERT_RESIZE',
+            'SHELVED',
+            'SHELVED_OFFLOADED',
+            'SHUTOFF',
+            'SOFT_DELETED',
+            'SUSPENDED',
+            'UNKNOWN',
+            'VERIFY_RESIZE',
+        ],
+        help='Status of the server',
+        )
+    server_state_create_parser.add_argument(
+        "user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
+    # server state delete parser
+    server_state_delete_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "delete",
+            help="Delete a server state",
+            )
+    server_state_delete_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the server state',
+        )
+
+    # server state import parser
+    server_state_import_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "import",
+            help="Import server states from OpenStack API",
+            )
 
     # server action parser
     server_action_parser: ArgumentParser = main_subparsers.add_parser(
@@ -302,6 +448,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
 
     # avoid variable not used warnings
+    do_nothing(server_state_import_parser)
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
 
@@ -320,6 +467,64 @@ def parse_args(args: Namespace):
     parse_flavor(args)
     parse_flavor(args, 'flavor_new')
     parse_flavor(args, 'flavor_old')
+
+    if (args.command in dangerous_cmds and args.sub_command
+            and args.sub_command in dangerous_cmds[args.command]):
+        ask_for_confirmation()
+
+
+def server_state_list(args: Namespace):
+    '''list server states'''
+    params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.server:
+        params += f'?server={args.server}'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
+    resp = api_request('get', f'/accounting/serverstates/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_state_show(args: Namespace):
+    '''show the server state with a given id'''
+    resp = api_request('get', f'/accounting/serverstates/{args.id}', None,
+                       args)
+    print_response(resp, args)
+
+
+def server_state_create(args: Namespace):
+    '''create a server state'''
+    data = {
+        'begin': args.begin,
+        'instance_id': args.instance_id,
+        'instance_name': args.instance_name,
+        'flavor': args.flavor,
+        'status': args.status,
+        'user': args.user,
+    }
+    if args.end:
+        data['end'] = args.end
+    resp = api_request('post', '/accounting/serverstates/', data, args)
+    print_response(resp, args)
+
+
+def server_state_delete(args: Namespace):
+    '''delete the server state with the given id'''
+    resp = api_request('delete', f'/accounting/serverstates/{args.id}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_state_import(args: Namespace):
+    '''import server states from OpenStack API'''
+    params = ""
+    resp = api_request('get', f'/accounting/serverstates/import/{params}',
+                       None, args)
+    print_response(resp, args)
 
 
 def server_action_list(args: Namespace):
@@ -433,5 +638,3 @@ def flavor_consumption(args: Namespace):
     resp = api_request('get', f'/accounting/flavorconsumption/{params}',
                        None, args)
     print_response(resp, args)
-
-

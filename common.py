@@ -237,3 +237,13 @@ def revoke_api_token(keystone_url, token):
         return False
 
     return True
+
+
+def ask_for_confirmation():
+    expected = 'Yes, I really really mean it!'
+    question = 'This command is potentially dangerous. Are you sure? ' + \
+        f'Then type "{expected}" and press enter: '
+    answer = input(question)
+    if answer != expected:
+        print('Aborting.')
+        exit(1)
