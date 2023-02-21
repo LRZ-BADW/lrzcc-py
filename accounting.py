@@ -1,11 +1,15 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_user, parse_project, parse_flavor)
+                    parse_user, parse_project, parse_flavor,
+                    ask_for_confirmation)
 
 
 cmds = ['server-state', 'server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-state', 'server-action']
+dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
+                  'server-action': ['create', 'modify', 'delete'],
+                  }
 
 
 def setup_parsers(main_subparsers: _SubParsersAction):
@@ -463,6 +467,10 @@ def parse_args(args: Namespace):
     parse_flavor(args)
     parse_flavor(args, 'flavor_new')
     parse_flavor(args, 'flavor_old')
+
+    if (args.command in dangerous_cmds and args.sub_command
+            and args.sub_command in dangerous_cmds[args.command]):
+        ask_for_confirmation()
 
 
 def server_state_list(args: Namespace):
