@@ -70,6 +70,71 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the server state',
         )
 
+    # server state create parser
+    server_state_create_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "create",
+            help="Create a server state",
+            )
+    server_state_create_parser.add_argument(
+        "begin",
+        type=valid_datetime,
+        help='Begin time of the server state',
+        )
+    server_state_create_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the server state',
+        )
+    server_state_create_parser.add_argument(
+        "instance_id",
+        type=str,
+        help='UUID of the instance',
+        )
+    server_state_create_parser.add_argument(
+        "instance_name",
+        type=str,
+        help='Name of the instance',
+        )
+    server_state_create_parser.add_argument(
+        "flavor",
+        type=str,
+        help='Name or ID of the flavor of the server',
+        )
+    server_state_create_parser.add_argument(
+        "status",
+        type=str,
+        choices=[
+            'ACTIVE',
+            'BUILD',
+            'DELETED',
+            'ERROR',
+            'HARD_REBOOT',
+            'MIGRATING',
+            'PASSWORD',
+            'PAUSED',
+            'REBOOT',
+            'REBUILD',
+            'RESCUE',
+            'RESIZE',
+            'REVERT_RESIZE',
+            'SHELVED',
+            'SHELVED_OFFLOADED',
+            'SHUTOFF',
+            'SOFT_DELETED',
+            'SUSPENDED',
+            'UNKNOWN',
+            'VERIFY_RESIZE',
+        ],
+        help='Status of the server',
+        )
+    server_state_create_parser.add_argument(
+        "user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
     # server state delete parser
     server_state_delete_parser: ArgumentParser = \
         server_state_subparsers.add_parser(
@@ -420,6 +485,22 @@ def server_state_show(args: Namespace):
     '''show the server state with a given id'''
     resp = api_request('get', f'/accounting/serverstates/{args.id}', None,
                        args)
+    print_response(resp, args)
+
+
+def server_state_create(args: Namespace):
+    '''create a server state'''
+    data = {
+        'begin': args.begin,
+        'instance_id': args.instance_id,
+        'instance_name': args.instance_name,
+        'flavor': args.flavor,
+        'status': args.status,
+        'user': args.user,
+    }
+    if args.end:
+        data['end'] = args.end
+    resp = api_request('post', '/accounting/serverstates/', data, args)
     print_response(resp, args)
 
 
