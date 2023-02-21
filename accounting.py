@@ -549,5 +549,3 @@ def flavor_consumption(args: Namespace):
     resp = api_request('get', f'/accounting/flavorconsumption/{params}',
                        None, args)
     print_response(resp, args)
-
-
