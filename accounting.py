@@ -1,8 +1,9 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
+from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor,
-                    ask_for_confirmation)
+                    ask_for_confirmation, generate_modify_data)
 
 
 cmds = ['server-state', 'server-action', 'flavor-consumption']
@@ -135,6 +136,82 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
     server_state_create_parser.add_argument(
         "user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
+    # server state modify parser
+    server_state_modify_parser: ArgumentParser = \
+        server_state_subparsers.add_parser(
+            "modify",
+            help="Create a server state",
+            )
+    server_state_modify_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the server state',
+        )
+    server_state_modify_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help='Begin time of the server state',
+        )
+    server_state_modify_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the server state',
+        )
+    server_state_modify_parser.add_argument(
+        "-i",
+        "--instance-id",
+        type=str,
+        help='UUID of the instance',
+        )
+    server_state_modify_parser.add_argument(
+        "-n",
+        "--instance-name",
+        type=str,
+        help='Name of the instance',
+        )
+    server_state_modify_parser.add_argument(
+        "-f",
+        "--flavor",
+        type=str,
+        help='Name or ID of the flavor of the server',
+        )
+    server_state_modify_parser.add_argument(
+        "-s",
+        "--status",
+        type=str,
+        choices=[
+            'ACTIVE',
+            'BUILD',
+            'DELETED',
+            'ERROR',
+            'HARD_REBOOT',
+            'MIGRATING',
+            'PASSWORD',
+            'PAUSED',
+            'REBOOT',
+            'REBUILD',
+            'RESCUE',
+            'RESIZE',
+            'REVERT_RESIZE',
+            'SHELVED',
+            'SHELVED_OFFLOADED',
+            'SHUTOFF',
+            'SOFT_DELETED',
+            'SUSPENDED',
+            'UNKNOWN',
+            'VERIFY_RESIZE',
+        ],
+        help='Status of the server',
+        )
+    server_state_modify_parser.add_argument(
+        "-u",
+        "--user",
         type=str,
         help='Name or ID of the user',
         )
@@ -509,6 +586,22 @@ def server_state_create(args: Namespace):
     if args.end:
         data['end'] = args.end
     resp = api_request('post', '/accounting/serverstates/', data, args)
+    print_response(resp, args)
+
+
+def server_state_modify(args: Namespace):
+    '''modify the server state with the given id'''
+    data = generate_modify_data(args,
+                                [('begin', str, 'begin'),
+                                 ('end', str, 'end'),
+                                 ('instance_id', str, 'instance_id'),
+                                 ('instance_name', str, 'instance_name'),
+                                 ('flavor', int, 'flavor'),
+                                 ('status', str, 'status'),
+                                 ('user', int, 'user'),
+                                 ])
+    resp = api_request('patch', f'/accounting/serverstates/{args.id}/',
+                       data, args)
     print_response(resp, args)
 
 
