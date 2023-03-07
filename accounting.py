@@ -235,6 +235,61 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="Import server states from OpenStack API",
             )
 
+    # server consumption parser
+    server_consumption_parser: ArgumentParser = \
+        main_subparsers.add_parser(
+            "server-consumption",
+            help="Calculate server consumption over time",
+            )
+    server_consumption_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help="Begin of the period to calculate the consumption for " +
+             "(default: beginning of the running year)",
+    )
+    server_consumption_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="End of the period to calculate the consumption for " +
+             "(default: now)",
+    )
+    # TODO this is not implemented yet, so we take it out for now
+    # server_consumption_parser.add_argument(
+    #     "-d",
+    #     "--detail",
+    #     action="store_true",
+    #     help="Also retrieve the detailed consumption log",
+    # )
+    server_consumption_filter_group = \
+        server_consumption_parser.add_mutually_exclusive_group()
+    server_consumption_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Calculate server consumption for all users",
+    )
+    server_consumption_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="Calculate server consumption for server with specified UUID",
+    )
+    server_consumption_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Calculate server consumption for user specified by name or ID",
+    )
+    server_consumption_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Calculate server consumption for the users of the project " +
+             "specified by name or ID",
+    )
+
     # server action parser
     server_action_parser: ArgumentParser = main_subparsers.add_parser(
         "server-action",
