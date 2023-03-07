@@ -675,6 +675,31 @@ def server_state_import(args: Namespace):
     print_response(resp, args)
 
 
+def server_consumption(args: Namespace):
+    '''Calculate the server consumption'''
+    params = ""
+    if args.begin:
+        params += f"&begin={args.begin}"
+    if args.end:
+        params += f"&end={args.end}"
+    # TODO this is not implemented yet so we take it out for now
+    # if args.detail:
+    #     params += "&detail=True"
+    if args.all:
+        params += "&all=True"
+    elif args.server:
+        params += f"&server={args.server}"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/serverconsumption/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
 def server_action_list(args: Namespace):
     '''list server actions'''
     params = ""
