@@ -6,7 +6,8 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['server-state', 'server-action', 'flavor-consumption']
+cmds = ['server-state', 'server-consumption',
+        'server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-state', 'server-action']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
                   'server-action': ['create', 'modify', 'delete'],
