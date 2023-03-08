@@ -256,13 +256,14 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="End of the period to calculate the consumption for " +
              "(default: now)",
     )
-    # TODO this is not implemented yet, so we take it out for now
-    # server_consumption_parser.add_argument(
-    #     "-d",
-    #     "--detail",
-    #     action="store_true",
-    #     help="Also retrieve the detailed consumption log",
-    # )
+    server_consumption_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Also retrieve the detailed breakdown of the consumption " +
+             "(by server for user filter, by user for project filter, " +
+             "by project for all flag, and no effect with server filter)",
+    )
     server_consumption_filter_group = \
         server_consumption_parser.add_mutually_exclusive_group()
     server_consumption_filter_group.add_argument(
@@ -683,9 +684,8 @@ def server_consumption(args: Namespace):
         params += f"&begin={args.begin}"
     if args.end:
         params += f"&end={args.end}"
-    # TODO this is not implemented yet so we take it out for now
-    # if args.detail:
-    #     params += "&detail=True"
+    if args.detail:
+        params += "&detail=True"
     if args.all:
         params += "&all=True"
     elif args.server:
