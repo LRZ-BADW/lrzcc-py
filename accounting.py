@@ -6,7 +6,8 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['server-state', 'server-action', 'flavor-consumption']
+cmds = ['server-state', 'server-consumption',
+        'server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-state', 'server-action']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
                   'server-action': ['create', 'modify', 'delete'],
@@ -234,6 +235,62 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "import",
             help="Import server states from OpenStack API",
             )
+
+    # server consumption parser
+    server_consumption_parser: ArgumentParser = \
+        main_subparsers.add_parser(
+            "server-consumption",
+            help="Calculate server consumption over time",
+            )
+    server_consumption_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help="Begin of the period to calculate the consumption for " +
+             "(default: beginning of the running year)",
+    )
+    server_consumption_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="End of the period to calculate the consumption for " +
+             "(default: now)",
+    )
+    server_consumption_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Also retrieve the detailed breakdown of the consumption " +
+             "(by server for user filter, by user for project filter, " +
+             "by project for all flag, and no effect with server filter)",
+    )
+    server_consumption_filter_group = \
+        server_consumption_parser.add_mutually_exclusive_group()
+    server_consumption_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Calculate server consumption for all users",
+    )
+    server_consumption_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="Calculate server consumption for server with specified UUID",
+    )
+    server_consumption_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Calculate server consumption for user specified by name or ID",
+    )
+    server_consumption_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Calculate server consumption for the users of the project " +
+             "specified by name or ID",
+    )
 
     # server action parser
     server_action_parser: ArgumentParser = main_subparsers.add_parser(
@@ -616,6 +673,30 @@ def server_state_import(args: Namespace):
     '''import server states from OpenStack API'''
     params = ""
     resp = api_request('get', f'/accounting/serverstates/import/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_consumption(args: Namespace):
+    '''Calculate the server consumption'''
+    params = ""
+    if args.begin:
+        params += f"&begin={args.begin}"
+    if args.end:
+        params += f"&end={args.end}"
+    if args.detail:
+        params += "&detail=True"
+    if args.all:
+        params += "&all=True"
+    elif args.server:
+        params += f"&server={args.server}"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/serverconsumption/{params}',
                        None, args)
     print_response(resp, args)
 
