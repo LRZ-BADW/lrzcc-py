@@ -6,7 +6,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['server-state', 'server-consumption',
+cmds = ['server-state', 'server-consumption', 'server-cost',
         'server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-state', 'server-action']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
@@ -336,6 +336,62 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "--project",
         type=str,
         help="List server actions for the project with the given name or ID",
+    )
+
+    # server cost parser
+    server_cost_parser: ArgumentParser = \
+        main_subparsers.add_parser(
+            "server-cost",
+            help="Calculate server cost over time",
+            )
+    server_cost_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help="Begin of the period to calculate the cost for " +
+             "(default: beginning of the running year)",
+    )
+    server_cost_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="End of the period to calculate the cost for " +
+             "(default: now)",
+    )
+    server_cost_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Also retrieve the detailed breakdown of the cost " +
+             "(by server for user filter, by user for project filter, " +
+             "by project for all flag, and no effect with server filter)",
+    )
+    server_cost_filter_group = \
+        server_cost_parser.add_mutually_exclusive_group()
+    server_cost_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Calculate server cost for all users",
+    )
+    server_cost_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="Calculate server cost for server with specified UUID",
+    )
+    server_cost_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Calculate server cost for user specified by name or ID",
+    )
+    server_cost_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Calculate server cost for the users of the project " +
+             "specified by name or ID",
     )
 
     # server action show parser
