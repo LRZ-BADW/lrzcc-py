@@ -757,6 +757,30 @@ def server_consumption(args: Namespace):
     print_response(resp, args)
 
 
+def server_cost(args: Namespace):
+    '''Calculate the server cost'''
+    params = ""
+    if args.begin:
+        params += f"&begin={args.begin}"
+    if args.end:
+        params += f"&end={args.end}"
+    if args.detail:
+        params += "&detail=True"
+    if args.all:
+        params += "&all=True"
+    elif args.server:
+        params += f"&server={args.server}"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/servercost/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
 def server_action_list(args: Namespace):
     '''list server actions'''
     params = ""
