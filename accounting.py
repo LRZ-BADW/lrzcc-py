@@ -1,5 +1,5 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-from datetime import datetime
+import urllib.parse
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor,
@@ -737,9 +737,9 @@ def server_consumption(args: Namespace):
     '''Calculate the server consumption'''
     params = ""
     if args.begin:
-        params += f"&begin={args.begin}"
+        params += f"&begin={urllib.parse.quote(args.begin)}"
     if args.end:
-        params += f"&end={args.end}"
+        params += f"&end={urllib.parse.quote(args.end)}"
     if args.detail:
         params += "&detail=True"
     if args.all:
@@ -873,9 +873,9 @@ def flavor_consumption(args: Namespace):
     '''Calculate the flavor consumption'''
     params = ""
     if args.begin:
-        params += f"&begin={args.begin}"
+        params += f"&begin={urllib.parse.quote(args.begin)}"
     if args.end:
-        params += f"&end={args.end}"
+        params += f"&end={urllib.parse.quote(args.end)}"
     # TODO this is not implemented yet so we take it out for now
     # if args.detail:
     #     params += "&detail=True"
