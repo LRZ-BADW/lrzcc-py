@@ -104,9 +104,17 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the flavor price',
         )
 
+    # flavor price initialize parser
+    flavor_price_initialize_parser: ArgumentParser = \
+        flavor_price_subparsers.add_parser(
+            "initialize",
+            help="Initialize the default flavor prices",
+            )
+
     # avoid variable not used warnings
     do_nothing(flavor_price_list_parser)
     do_nothing(flavor_price_create_parser)
+    do_nothing(flavor_price_initialize_parser)
 
     return parsers
 
