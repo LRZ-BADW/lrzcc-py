@@ -44,7 +44,7 @@ def api_request(method, path, data, args):
 
 def valid_datetime(string):
     try:
-        datetime.strptime(string, "%Y-%m-%dT%H:%M:%SZ")
+        datetime.strptime(string, "%Y-%m-%dT%H:%M:%S%z")
         return string
     except ValueError:
         msg = f"Not a valid datetime: {string}"
