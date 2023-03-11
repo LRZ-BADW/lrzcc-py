@@ -160,3 +160,9 @@ def flavor_price_delete(args: Namespace):
     resp = api_request('delete', f'/pricing/flavorprices/{args.id}', None,
                        args)
     print_response(resp, args)
+
+
+def flavor_price_initialize(args: Namespace):
+    '''initialize the default flavor prices'''
+    resp = api_request('get', '/pricing/flavorprices/initialize/', None, args)
+    print_response(resp, args)
