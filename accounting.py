@@ -761,9 +761,9 @@ def server_cost(args: Namespace):
     '''Calculate the server cost'''
     params = ""
     if args.begin:
-        params += f"&begin={args.begin}"
+        params += f"&begin={urllib.parse.quote(args.begin)}"
     if args.end:
-        params += f"&end={args.end}"
+        params += f"&end={urllib.parse.quote(args.end)}"
     if args.detail:
         params += "&detail=True"
     if args.all:
