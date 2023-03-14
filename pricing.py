@@ -75,9 +75,9 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "--start-time",
         type=valid_datetime,
         help="Datetime at which this price starts in ISO-8601 format, "
-             "so for example 2021-11-09T12:30:00Z "
+             "so for example 2021-11-09T12:30:00+01:00 "
              "(default: now)",
-        default=datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        default=datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"),
     )
 
     # flavor price delete parser
@@ -104,9 +104,17 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the flavor price',
         )
 
+    # flavor price initialize parser
+    flavor_price_initialize_parser: ArgumentParser = \
+        flavor_price_subparsers.add_parser(
+            "initialize",
+            help="Initialize the default flavor prices",
+            )
+
     # avoid variable not used warnings
     do_nothing(flavor_price_list_parser)
     do_nothing(flavor_price_create_parser)
+    do_nothing(flavor_price_initialize_parser)
 
     return parsers
 
@@ -151,4 +159,10 @@ def flavor_price_delete(args: Namespace):
     '''delete the flavor price with the given id'''
     resp = api_request('delete', f'/pricing/flavorprices/{args.id}', None,
                        args)
+    print_response(resp, args)
+
+
+def flavor_price_initialize(args: Namespace):
+    '''initialize the default flavor prices'''
+    resp = api_request('get', '/pricing/flavorprices/initialize/', None, args)
     print_response(resp, args)

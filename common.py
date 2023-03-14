@@ -44,7 +44,7 @@ def api_request(method, path, data, args):
 
 def valid_datetime(string):
     try:
-        datetime.strptime(string, "%Y-%m-%dT%H:%M:%SZ")
+        datetime.strptime(string, "%Y-%m-%dT%H:%M:%S%z")
         return string
     except ValueError:
         msg = f"Not a valid datetime: {string}"
@@ -96,16 +96,19 @@ list_paths = {
 }
 
 
-def is_staff(args: Namespace):
+def get_me(args: Namespace):
     resp = api_request('get', '/user/me/', None, args)
     user = resp.json()
-    return user['is_staff']
+    return user
 
 
 def api_list(entity: str, args: Namespace):
     params = ''
-    if is_staff(args):
+    me = get_me(args)
+    if me['is_staff']:
         params += '?all=True'
+    elif entity == 'user' and me['role'] == 2:
+        params += f"?project={me['project']['id']}"
     path = f'{list_paths[entity]}{params}'
     resp = api_request('get', path, None, args)
     return resp.json()
@@ -234,3 +237,13 @@ def revoke_api_token(keystone_url, token):
         return False
 
     return True
+
+
+def ask_for_confirmation():
+    expected = 'Yes, I really really mean it!'
+    question = 'This command is potentially dangerous. Are you sure? ' + \
+        f'Then type "{expected}" and press enter: '
+    answer = input(question)
+    if answer != expected:
+        print('Aborting.')
+        exit(1)
