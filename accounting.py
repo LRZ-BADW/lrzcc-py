@@ -1,12 +1,12 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-from datetime import datetime
+import urllib.parse
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['server-state', 'server-consumption',
+cmds = ['server-state', 'server-consumption', 'server-cost',
         'server-action', 'flavor-consumption']
 cmds_with_sub_cmds = ['server-state', 'server-action']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
@@ -336,6 +336,62 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "--project",
         type=str,
         help="List server actions for the project with the given name or ID",
+    )
+
+    # server cost parser
+    server_cost_parser: ArgumentParser = \
+        main_subparsers.add_parser(
+            "server-cost",
+            help="Calculate server cost over time",
+            )
+    server_cost_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help="Begin of the period to calculate the cost for " +
+             "(default: beginning of the running year)",
+    )
+    server_cost_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="End of the period to calculate the cost for " +
+             "(default: now)",
+    )
+    server_cost_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Also retrieve the detailed breakdown of the cost " +
+             "(by server for user filter, by user for project filter, " +
+             "by project for all flag, and no effect with server filter)",
+    )
+    server_cost_filter_group = \
+        server_cost_parser.add_mutually_exclusive_group()
+    server_cost_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Calculate server cost for all users",
+    )
+    server_cost_filter_group.add_argument(
+        "-s",
+        "--server",
+        type=str,
+        help="Calculate server cost for server with specified UUID",
+    )
+    server_cost_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Calculate server cost for user specified by name or ID",
+    )
+    server_cost_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Calculate server cost for the users of the project " +
+             "specified by name or ID",
     )
 
     # server action show parser
@@ -681,9 +737,9 @@ def server_consumption(args: Namespace):
     '''Calculate the server consumption'''
     params = ""
     if args.begin:
-        params += f"&begin={args.begin}"
+        params += f"&begin={urllib.parse.quote(args.begin)}"
     if args.end:
-        params += f"&end={args.end}"
+        params += f"&end={urllib.parse.quote(args.end)}"
     if args.detail:
         params += "&detail=True"
     if args.all:
@@ -697,6 +753,30 @@ def server_consumption(args: Namespace):
     if params:
         params = '?' + params[1:]
     resp = api_request('get', f'/accounting/serverconsumption/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def server_cost(args: Namespace):
+    '''Calculate the server cost'''
+    params = ""
+    if args.begin:
+        params += f"&begin={urllib.parse.quote(args.begin)}"
+    if args.end:
+        params += f"&end={urllib.parse.quote(args.end)}"
+    if args.detail:
+        params += "&detail=True"
+    if args.all:
+        params += "&all=True"
+    elif args.server:
+        params += f"&server={args.server}"
+    elif args.user:
+        params += f"&user={args.user}"
+    elif args.project:
+        params += f"&project={args.project}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/accounting/servercost/{params}',
                        None, args)
     print_response(resp, args)
 
@@ -793,9 +873,9 @@ def flavor_consumption(args: Namespace):
     '''Calculate the flavor consumption'''
     params = ""
     if args.begin:
-        params += f"&begin={args.begin}"
+        params += f"&begin={urllib.parse.quote(args.begin)}"
     if args.end:
-        params += f"&end={args.end}"
+        params += f"&end={urllib.parse.quote(args.end)}"
     # TODO this is not implemented yet so we take it out for now
     # if args.detail:
     #     params += "&detail=True"
