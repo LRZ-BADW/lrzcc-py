@@ -235,6 +235,14 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "import",
             help="Import server states from OpenStack API",
             )
+    server_state_import_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="count",
+        default=0,
+        help="Don't print anything, when nothing is imported. " +
+             "Use twice to suppress output even if something is imported.",
+    )
 
     # server consumption parser
     server_consumption_parser: ArgumentParser = \
@@ -638,7 +646,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     )
 
     # avoid variable not used warnings
-    do_nothing(server_state_import_parser)
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
 
@@ -730,6 +737,15 @@ def server_state_import(args: Namespace):
     params = ""
     resp = api_request('get', f'/accounting/serverstates/import/{params}',
                        None, args)
+    resp_json = resp.json()
+    if args.quiet > 1:
+        return
+    if (args.quiet and not
+            (('new_state_count' in resp_json and
+              resp_json['new_state_count']) or
+             ('end_state_count' in resp_json and
+              resp_json['end_state_count']))):
+        return
     print_response(resp, args)
 
 
