@@ -737,6 +737,15 @@ def server_state_import(args: Namespace):
     params = ""
     resp = api_request('get', f'/accounting/serverstates/import/{params}',
                        None, args)
+    resp_json = resp.json()
+    if args.quiet > 1:
+        return
+    if (args.quiet and not
+            (('new_state_count' in resp_json and
+              resp_json['new_state_count']) or
+             ('end_state_count' in resp_json and
+              resp_json['end_state_count']))):
+        return
     print_response(resp, args)
 
 
