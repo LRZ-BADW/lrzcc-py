@@ -207,7 +207,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-a",
         "--all",
         action="store_true",
-        help="List all flavors",
+        help="List all flavor groups",
     )
 
     # flavor group show parser
