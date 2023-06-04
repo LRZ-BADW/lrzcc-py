@@ -12,6 +12,7 @@ import pricing
 import accounting
 import quota
 import resources
+import budgeting
 from common import issue_api_token, revoke_api_token
 
 
@@ -126,6 +127,7 @@ def setup_parsers():
     parsers.update(accounting.setup_parsers(subparsers))
     parsers.update(quota.setup_parsers(subparsers))
     parsers.update(resources.setup_parsers(subparsers))
+    parsers.update(budgeting.setup_parsers(subparsers))
 
     # get list of commands with sub-commands
     global cmds_with_sub_cmds
@@ -135,9 +137,11 @@ def setup_parsers():
     cmds_with_sub_cmds.extend(accounting.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(quota.cmds_with_sub_cmds)
     cmds_with_sub_cmds.extend(resources.cmds_with_sub_cmds)
+    cmds_with_sub_cmds.extend(budgeting.cmds_with_sub_cmds)
 
     # get command to module map
-    for module in [user, hello, pricing, accounting, quota, resources]:
+    for module in [user, hello, pricing, accounting, quota, resources,
+                   budgeting]:
         for cmd in module.cmds:
             cmd_mod_map[cmd] = module
 
