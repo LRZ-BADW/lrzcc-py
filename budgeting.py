@@ -17,6 +17,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     '''setup the accounting parser'''
     parsers = {}
 
+    # project budget parser
     project_budget_parser: ArgumentParser = main_subparsers.add_parser(
         "project-budget",
         help="project budget commands",
