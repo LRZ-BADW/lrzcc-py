@@ -9,7 +9,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
 cmds = ['project-budget', 'user-budget']
 cmds_with_sub_cmds = ['project-budget', 'user-budget']
 dangerous_cmds = {'project-budget': ['delete'],
-                  'project-budget': ['delete'],
+                  'user-budget': ['delete'],
                   }
 
 
