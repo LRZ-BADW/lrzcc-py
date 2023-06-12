@@ -36,8 +36,28 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             help="List project budgets",
             )
 
+    # user budget parser
+    user_budget_parser: ArgumentParser = main_subparsers.add_parser(
+        "user-budget",
+        help="user budget commands",
+        )
+    parsers['user-budget'] = user_budget_parser
+    user_budget_subparsers: _SubParsersAction = \
+        user_budget_parser.add_subparsers(
+            help="sub-commands",
+            dest="sub_command",
+            )
+
+    # user budget list parser
+    user_budget_list_parser: ArgumentParser = \
+        user_budget_subparsers.add_parser(
+            "list",
+            help="List user budgets",
+            )
+
     # avoid variable not used warnings
     do_nothing(project_budget_list_parser)
+    do_nothing(user_budget_list_parser)
 
     return parsers
 
