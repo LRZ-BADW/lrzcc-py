@@ -48,6 +48,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the project budget',
         )
 
+    # project budget delete parser
+    project_budget_delete_parser: ArgumentParser = \
+        project_budget_subparsers.add_parser(
+            "delete",
+            help="Show project budget",
+            )
+    project_budget_delete_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the project budget',
+        )
+
     # user budget parser
     user_budget_parser: ArgumentParser = main_subparsers.add_parser(
         "user-budget",
@@ -108,6 +120,13 @@ def project_budget_list(args: Namespace):
 def project_budget_show(args: Namespace):
     '''show project budget with the given ID'''
     resp = api_request('get', f'/budgeting/projectbudgets/{args.id}',
+                       None, args)
+    print_response(resp, args)
+
+
+def project_budget_delete(args: Namespace):
+    '''delete project budget with the given ID'''
+    resp = api_request('delete', f'/budgeting/projectbudgets/{args.id}',
                        None, args)
     print_response(resp, args)
 
