@@ -1,5 +1,6 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
 import urllib.parse
+from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_user, parse_project, parse_flavor,
@@ -47,6 +48,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='ID of the project budget',
         )
+
+    # project budget create parser
+    project_budget_create_parser: ArgumentParser = \
+        project_budget_subparsers.add_parser(
+            "create",
+            help="Create project budget",
+            )
+    project_budget_create_parser.add_argument(
+        "project",
+        type=str,
+        help='Project name or ID',
+    )
+    project_budget_create_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help='Year for the budget (default: current year)',
+        default=datetime.now().year,
+    )
+    project_budget_create_parser.add_argument(
+        "-a",
+        "--amount",
+        type=int,
+        help='Amount for the budget (default: 0)',
+        default=0,
+    )
 
     # project budget delete parser
     project_budget_delete_parser: ArgumentParser = \
@@ -140,6 +167,17 @@ def project_budget_delete(args: Namespace):
     '''delete project budget with the given ID'''
     resp = api_request('delete', f'/budgeting/projectbudgets/{args.id}',
                        None, args)
+    print_response(resp, args)
+
+
+def project_budget_create(args: Namespace):
+    '''create a project budget'''
+    data = {
+        "project": args.project,
+        "year": args.year,
+        "amount": args.amount,
+    }
+    resp = api_request('post', '/budgeting/projectbudgets/', data, args)
     print_response(resp, args)
 
 
