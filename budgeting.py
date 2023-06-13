@@ -118,6 +118,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the user budget',
         )
 
+    # user budget create parser
+    user_budget_create_parser: ArgumentParser = \
+        user_budget_subparsers.add_parser(
+            "create",
+            help="Create user budget",
+            )
+    user_budget_create_parser.add_argument(
+        "user",
+        type=str,
+        help='User name or ID',
+    )
+    user_budget_create_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help='Year for the budget (default: current year)',
+        default=datetime.now().year,
+    )
+    user_budget_create_parser.add_argument(
+        "-a",
+        "--amount",
+        type=int,
+        help='Amount for the budget (default: 0)',
+        default=0,
+    )
+
     # user budget delete parser
     user_budget_delete_parser: ArgumentParser = \
         user_budget_subparsers.add_parser(
@@ -193,6 +219,17 @@ def user_budget_show(args: Namespace):
     '''show user budget with the given ID'''
     resp = api_request('get', f'/budgeting/userbudgets/{args.id}',
                        None, args)
+    print_response(resp, args)
+
+
+def user_budget_create(args: Namespace):
+    '''create a user budget'''
+    data = {
+        "user": args.user,
+        "year": args.year,
+        "amount": args.amount,
+    }
+    resp = api_request('post', '/budgeting/userbudgets/', data, args)
     print_response(resp, args)
 
 
