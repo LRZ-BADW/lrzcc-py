@@ -162,6 +162,24 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         default=0,
     )
 
+    # user budget modify parser
+    user_budget_modify_parser: ArgumentParser = \
+        user_budget_subparsers.add_parser(
+            "modify",
+            help="Modify user budget",
+            )
+    user_budget_modify_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the user budget',
+        )
+    user_budget_modify_parser.add_argument(
+        "-a",
+        "--amount",
+        type=int,
+        help='New amount for the budget',
+    )
+
     # user budget delete parser
     user_budget_delete_parser: ArgumentParser = \
         user_budget_subparsers.add_parser(
@@ -265,4 +283,14 @@ def user_budget_delete(args: Namespace):
     '''delete user budget with the given ID'''
     resp = api_request('delete', f'/budgeting/userbudgets/{args.id}',
                        None, args)
+    print_response(resp, args)
+
+
+def user_budget_modify(args: Namespace):
+    '''modify the user budget with the given id'''
+    data = generate_modify_data(args,
+                                [('amount', int, 'amount'),
+                                 ])
+    resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/',
+                       data, args)
     print_response(resp, args)
