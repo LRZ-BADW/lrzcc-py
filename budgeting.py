@@ -79,7 +79,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     project_budget_delete_parser: ArgumentParser = \
         project_budget_subparsers.add_parser(
             "delete",
-            help="Show project budget",
+            help="Delete project budget",
             )
     project_budget_delete_parser.add_argument(
         "id",
