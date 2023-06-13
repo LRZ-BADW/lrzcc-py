@@ -75,6 +75,24 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         default=0,
     )
 
+    # project budget modify parser
+    project_budget_modify_parser: ArgumentParser = \
+        project_budget_subparsers.add_parser(
+            "modify",
+            help="Modify project budget",
+            )
+    project_budget_modify_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the project budget',
+        )
+    project_budget_modify_parser.add_argument(
+        "-a",
+        "--amount",
+        type=int,
+        help='New amount for the budget',
+    )
+
     # project budget delete parser
     project_budget_delete_parser: ArgumentParser = \
         project_budget_subparsers.add_parser(
@@ -204,6 +222,16 @@ def project_budget_create(args: Namespace):
         "amount": args.amount,
     }
     resp = api_request('post', '/budgeting/projectbudgets/', data, args)
+    print_response(resp, args)
+
+
+def project_budget_modify(args: Namespace):
+    '''modify the project budget with the given id'''
+    data = generate_modify_data(args,
+                                [('amount', int, 'amount'),
+                                 ])
+    resp = api_request('patch', f'/budgeting/projectbudgets/{args.id}/',
+                       data, args)
     print_response(resp, args)
 
 
