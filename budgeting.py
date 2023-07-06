@@ -233,8 +233,6 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         )
 
     # avoid variable not used warnings
-    do_nothing(project_budget_list_parser)
-    do_nothing(user_budget_list_parser)
 
     return parsers
 
