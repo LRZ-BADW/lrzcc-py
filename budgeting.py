@@ -251,6 +251,12 @@ def parse_args(args: Namespace):
 def project_budget_list(args: Namespace):
     '''list project budgets'''
     params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
     resp = api_request('get', f'/budgeting/projectbudgets/{params}',
                        None, args)
     print_response(resp, args)
