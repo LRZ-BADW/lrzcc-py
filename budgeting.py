@@ -36,6 +36,26 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "list",
             help="List project budgets",
             )
+    project_budget_list_filter_group = \
+        project_budget_list_parser.add_mutually_exclusive_group()
+    project_budget_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all project budgets",
+    )
+    project_budget_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List project budgets for the user with the given name or ID",
+    )
+    project_budget_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List project budgets for the project with the given name or ID",
+    )
 
     # project budget show parser
     project_budget_show_parser: ArgumentParser = \
