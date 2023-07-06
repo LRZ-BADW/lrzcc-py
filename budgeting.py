@@ -300,6 +300,12 @@ def project_budget_modify(args: Namespace):
 def user_budget_list(args: Namespace):
     '''list user budgets'''
     params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
     resp = api_request('get', f'/budgeting/userbudgets/{params}',
                        None, args)
     print_response(resp, args)
