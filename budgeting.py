@@ -112,6 +112,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='New amount for the budget',
     )
+    project_budget_modify_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help='Force the modification',
+    )
 
     # project budget delete parser
     project_budget_delete_parser: ArgumentParser = \
@@ -219,6 +225,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='New amount for the budget',
     )
+    user_budget_modify_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help='Force the modification',
+    )
 
     # user budget delete parser
     user_budget_delete_parser: ArgumentParser = \
@@ -289,10 +301,14 @@ def project_budget_create(args: Namespace):
 
 def project_budget_modify(args: Namespace):
     '''modify the project budget with the given id'''
+    params = ""
+    if args.force:
+        params += '?force=True'
     data = generate_modify_data(args,
                                 [('amount', int, 'amount'),
                                  ])
-    resp = api_request('patch', f'/budgeting/projectbudgets/{args.id}/',
+    resp = api_request('patch',
+                       f'/budgeting/projectbudgets/{args.id}/{params}',
                        data, args)
     print_response(resp, args)
 
@@ -338,9 +354,12 @@ def user_budget_delete(args: Namespace):
 
 def user_budget_modify(args: Namespace):
     '''modify the user budget with the given id'''
+    params = ""
+    if args.force:
+        params += '?force=True'
     data = generate_modify_data(args,
                                 [('amount', int, 'amount'),
                                  ])
-    resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/',
+    resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/{params}',
                        data, args)
     print_response(resp, args)
