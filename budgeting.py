@@ -354,9 +354,12 @@ def user_budget_delete(args: Namespace):
 
 def user_budget_modify(args: Namespace):
     '''modify the user budget with the given id'''
+    params = ""
+    if args.force:
+        params += '?force=True'
     data = generate_modify_data(args,
                                 [('amount', int, 'amount'),
                                  ])
-    resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/',
+    resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/{params}',
                        data, args)
     print_response(resp, args)
