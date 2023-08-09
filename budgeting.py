@@ -301,10 +301,14 @@ def project_budget_create(args: Namespace):
 
 def project_budget_modify(args: Namespace):
     '''modify the project budget with the given id'''
+    params = ""
+    if args.force:
+        params += '?force=True'
     data = generate_modify_data(args,
                                 [('amount', int, 'amount'),
                                  ])
-    resp = api_request('patch', f'/budgeting/projectbudgets/{args.id}/',
+    resp = api_request('patch',
+                       f'/budgeting/projectbudgets/{args.id}/{params}',
                        data, args)
     print_response(resp, args)
 
