@@ -112,6 +112,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='New amount for the budget',
     )
+    project_budget_modify_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help='Force the modification',
+    )
 
     # project budget delete parser
     project_budget_delete_parser: ArgumentParser = \
