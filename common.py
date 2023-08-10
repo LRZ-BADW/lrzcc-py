@@ -19,7 +19,10 @@ def print_response(resp, args):
     if not resp.content:
         return
     if resp.status_code >= 400:
-        print(f"Error: {resp.status_code} {resp.reason}", file=sys.stderr)
+        content = resp.json()
+        message = ': ' + content['msg'] if 'msg' in content else ''
+        print(f"Error: {resp.status_code} {resp.reason}{message}",
+              file=sys.stderr)
         sys.exit(1)
     if args.format == 'json':
         output = json.dumps(resp.json())
