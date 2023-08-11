@@ -706,6 +706,71 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the volume state',
         )
 
+    # volume state modify parser
+    volume_state_modify_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "modify",
+            help="Create a volume state",
+            )
+    volume_state_modify_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help='Begin time of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-i",
+        "--volume-id",
+        type=str,
+        help='UUID of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-n",
+        "--volume-name",
+        type=str,
+        help='Name of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-S",
+        "--size",
+        type=str,
+        help='Size of the volume in GiB',
+        )
+    volume_state_modify_parser.add_argument(
+        "-s",
+        "--status",
+        type=str,
+        choices=[
+            'ATTACHING',
+            'AVAILABLE',
+            'CREATING',
+            'DELETING',
+            'DETACHING',
+            'ERROR',
+            'ERROR_DELETING',
+            'IN-USE',
+            'MAINTENANCE',
+        ],
+        help='Status of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
     # volume state delete parser
     volume_state_delete_parser: ArgumentParser = \
         volume_state_subparsers.add_parser(
@@ -1082,4 +1147,20 @@ def volume_state_delete(args: Namespace):
     '''delete the volume state with the given id'''
     resp = api_request('delete', f'/accounting/volumestates/{args.id}',
                        None, args)
+    print_response(resp, args)
+
+
+def volume_state_modify(args: Namespace):
+    '''modify the volume state with the given id'''
+    data = generate_modify_data(args,
+                                [('begin', str, 'begin'),
+                                 ('end', str, 'end'),
+                                 ('volume_id', str, 'volume_id'),
+                                 ('volume_name', str, 'volume_name'),
+                                 ('size', int, 'size'),
+                                 ('status', str, 'status'),
+                                 ('user', int, 'user'),
+                                 ])
+    resp = api_request('patch', f'/accounting/volumestates/{args.id}/',
+                       data, args)
     print_response(resp, args)
