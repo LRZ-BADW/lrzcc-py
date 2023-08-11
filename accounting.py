@@ -706,6 +706,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the volume state',
         )
 
+    # volume state delete parser
+    volume_state_delete_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "delete",
+            help="Delete a volume state",
+            )
+    volume_state_delete_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+
     # volume state create parser
     volume_state_create_parser: ArgumentParser = \
         volume_state_subparsers.add_parser(
@@ -1063,4 +1075,11 @@ def volume_state_show(args: Namespace):
     '''show the volume state with a given id'''
     resp = api_request('get', f'/accounting/volumestates/{args.id}', None,
                        args)
+    print_response(resp, args)
+
+
+def volume_state_delete(args: Namespace):
+    '''delete the volume state with the given id'''
+    resp = api_request('delete', f'/accounting/volumestates/{args.id}',
+                       None, args)
     print_response(resp, args)
