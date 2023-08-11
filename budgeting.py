@@ -391,6 +391,24 @@ def project_budget_modify(args: Namespace):
     print_response(resp, args)
 
 
+def project_budget_over(args: Namespace):
+    '''check if cost exceeds project budget'''
+    params = ""
+    if args.all:
+        params += '&all=True'
+    elif args.project:
+        params += f'&project={args.project}'
+    elif args.budget:
+        params += f'&budget={args.budget}'
+    if args.detail:
+        params += '&detail=True'
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/budgeting/projectbudgets/over/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
 def user_budget_list(args: Namespace):
     '''list user budgets'''
     params = ""
@@ -440,4 +458,26 @@ def user_budget_modify(args: Namespace):
                                  ])
     resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/{params}',
                        data, args)
+    print_response(resp, args)
+
+
+def user_budget_over(args: Namespace):
+    '''check if cost exceeds project budget'''
+    params = ""
+    if args.all:
+        params += '&all=True'
+    elif args.project:
+        params += f'&project={args.project}'
+    elif args.user:
+        params += f'&user={args.user}'
+    elif args.budget:
+        params += f'&budget={args.budget}'
+    if args.detail:
+        params += '&detail=True'
+    if args.combined:
+        params += '&combined=True'
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/budgeting/userbudgets/over/{params}',
+                       None, args)
     print_response(resp, args)
