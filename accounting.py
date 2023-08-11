@@ -722,6 +722,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='Name of the volume',
         )
     volume_state_create_parser.add_argument(
+        "size",
+        type=int,
+        help='Size of the volume in GiB',
+        )
+    volume_state_create_parser.add_argument(
         "status",
         type=str,
         choices=[
@@ -1034,6 +1039,7 @@ def volume_state_create(args: Namespace):
         'volume_name': args.volume_name,
         'status': args.status,
         'user': args.user,
+        'size': args.size,
     }
     if args.end:
         data['end'] = args.end
