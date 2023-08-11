@@ -694,6 +694,18 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List volume states for the project with the given name or ID",
     )
 
+    # volume state show parser
+    volume_state_show_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "show",
+            help="Show a volume state",
+            )
+    volume_state_show_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+
     # volume state create parser
     volume_state_create_parser: ArgumentParser = \
         volume_state_subparsers.add_parser(
@@ -1044,4 +1056,11 @@ def volume_state_create(args: Namespace):
     if args.end:
         data['end'] = args.end
     resp = api_request('post', '/accounting/volumestates/', data, args)
+    print_response(resp, args)
+
+
+def volume_state_show(args: Namespace):
+    '''show the volume state with a given id'''
+    resp = api_request('get', f'/accounting/volumestates/{args.id}', None,
+                       args)
     print_response(resp, args)
