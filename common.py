@@ -50,6 +50,7 @@ def api_request(method, path, data, args):
 
 def valid_datetime(string):
     try:
+        # Example: 2023-08-11T11:25:47.583802+02:00
         datetime.strptime(string, "%Y-%m-%dT%H:%M:%S%z")
         return string
     except ValueError:
