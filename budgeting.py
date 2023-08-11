@@ -155,6 +155,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         action="store_true",
         help="List all project budgets and if their exceeded",
     )
+    project_budget_over_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Show cost and budget values as well",
+    )
 
     # user budget parser
     user_budget_parser: ArgumentParser = main_subparsers.add_parser(
@@ -304,6 +310,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "--combined",
         action="store_true",
         help="Combine over-budget status of user- and project budgets",
+    )
+    user_budget_over_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Show cost and budget values as well",
     )
 
     # avoid variable not used warnings
