@@ -137,19 +137,21 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "over",
             help="Check if cost exceeds project budget",
         )
-    project_budget_over_parser.add_argument(
+    project_budget_over_filter_group = \
+        project_budget_over_parser.add_mutually_exclusive_group()
+    project_budget_over_filter_group.add_argument(
         "-b",
         "--budget",
         type=int,
         help="Check if respective cost exceeds the budget with the given ID",
     )
-    project_budget_over_parser.add_argument(
+    project_budget_over_filter_group.add_argument(
         "-p",
         "--project",
         type=str,
         help="Check project budgets for the project with the given name or ID",
     )
-    project_budget_over_parser.add_argument(
+    project_budget_over_filter_group.add_argument(
         "-a",
         "--all",
         action="store_true",
@@ -281,25 +283,27 @@ def setup_parsers(main_subparsers: _SubParsersAction):
             "over",
             help="Check if cost exceeds user budget",
         )
-    user_budget_over_parser.add_argument(
+    user_budget_over_filter_group = \
+        user_budget_over_parser.add_mutually_exclusive_group()
+    user_budget_over_filter_group.add_argument(
         "-b",
         "--budget",
         type=int,
         help="Check if respective cost exceeds the budget with the given ID",
     )
-    user_budget_over_parser.add_argument(
+    user_budget_over_filter_group.add_argument(
         "-u",
         "--user",
         type=str,
         help="Check user budgets for the user with the given name or ID",
     )
-    user_budget_over_parser.add_argument(
+    user_budget_over_filter_group.add_argument(
         "-p",
         "--project",
         type=str,
         help="Check user budgets for the project with the given name or ID",
     )
-    user_budget_over_parser.add_argument(
+    user_budget_over_filter_group.add_argument(
         "-a",
         "--all",
         action="store_true",
