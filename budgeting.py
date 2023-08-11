@@ -131,6 +131,31 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the project budget',
         )
 
+    # project budget over parser
+    project_budget_over_parser: ArgumentParser = \
+        project_budget_subparsers.add_parser(
+            "over",
+            help="Check if cost exceeds project budget",
+        )
+    project_budget_over_parser.add_argument(
+        "-b",
+        "--budget",
+        type=int,
+        help="Check if respective cost exceeds the budget with the given ID",
+    )
+    project_budget_over_parser.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Check project budgets for the project with the given name or ID",
+    )
+    project_budget_over_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all project budgets and if their exceeded",
+    )
+
     # user budget parser
     user_budget_parser: ArgumentParser = main_subparsers.add_parser(
         "user-budget",
