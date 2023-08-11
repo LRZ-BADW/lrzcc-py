@@ -13,7 +13,7 @@ cmds_with_sub_cmds = ['server-state', 'server-action',
                       'volume-state']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
                   'server-action': ['create', 'modify', 'delete'],
-                  # 'volume-state': ['create', 'modify', 'delete'],
+                  'volume-state': ['create', 'modify', 'delete'],
                   }
 
 
