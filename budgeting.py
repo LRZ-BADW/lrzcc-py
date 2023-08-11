@@ -269,6 +269,43 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the user budget',
         )
 
+    # user budget over parser
+    user_budget_over_parser: ArgumentParser = \
+        user_budget_subparsers.add_parser(
+            "over",
+            help="Check if cost exceeds user budget",
+        )
+    user_budget_over_parser.add_argument(
+        "-b",
+        "--budget",
+        type=int,
+        help="Check if respective cost exceeds the budget with the given ID",
+    )
+    user_budget_over_parser.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Check user budgets for the user with the given name or ID",
+    )
+    user_budget_over_parser.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Check user budgets for the project with the given name or ID",
+    )
+    user_budget_over_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all user budgets and if their exceeded",
+    )
+    user_budget_over_parser.add_argument(
+        "-c",
+        "--combined",
+        action="store_true",
+        help="Combine over-budget status of user- and project budgets",
+    )
+
     # avoid variable not used warnings
 
     return parsers
