@@ -56,6 +56,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="List project budgets for the project with the given name or ID",
     )
+    project_budget_list_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="List project budgets for only the given year",
+    )
 
     # project budget show parser
     project_budget_show_parser: ArgumentParser = \
@@ -202,6 +208,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="List user budgets for the project with the given name or ID",
     )
+    user_budget_list_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="List user budgets for only the given year",
+    )
 
     # user budget show parser
     user_budget_show_parser: ArgumentParser = \
@@ -347,6 +359,8 @@ def project_budget_list(args: Namespace):
         params += f'?user={args.user}'
     elif args.project:
         params += f'?project={args.project}'
+    if args.year:
+        params += f'&year={args.year}'
     resp = api_request('get', f'/budgeting/projectbudgets/{params}',
                        None, args)
     print_response(resp, args)
@@ -418,6 +432,8 @@ def user_budget_list(args: Namespace):
         params += f'?user={args.user}'
     elif args.project:
         params += f'?project={args.project}'
+    if args.year:
+        params += f'&year={args.year}'
     resp = api_request('get', f'/budgeting/userbudgets/{params}',
                        None, args)
     print_response(resp, args)
