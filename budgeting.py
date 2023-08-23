@@ -164,6 +164,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all project budgets and if their exceeded",
     )
     project_budget_over_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="""List project budgets for only the given year
+             (default: current year)""",
+    )
+    project_budget_over_parser.add_argument(
         "-d",
         "--detail",
         action="store_true",
@@ -322,6 +329,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all user budgets and if their exceeded",
     )
     user_budget_over_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="""List user budgets for only the given year
+             (default: current year)""",
+    )
+    user_budget_over_parser.add_argument(
         "-c",
         "--combined",
         action="store_true",
@@ -414,6 +428,8 @@ def project_budget_over(args: Namespace):
         params += f'&project={args.project}'
     elif args.budget:
         params += f'&budget={args.budget}'
+    if args.year:
+        params += f'&year={args.year}'
     if args.detail:
         params += '&detail=True'
     if params:
@@ -488,6 +504,8 @@ def user_budget_over(args: Namespace):
         params += f'&user={args.user}'
     elif args.budget:
         params += f'&budget={args.budget}'
+    if args.year:
+        params += f'&year={args.year}'
     if args.detail:
         params += '&detail=True'
     if args.combined:
