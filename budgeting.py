@@ -164,11 +164,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all project budgets and if their exceeded",
     )
     project_budget_over_parser.add_argument(
-        "-y",
-        "--year",
-        type=int,
-        help="""List project budgets for only the given year
-             (default: current year)""",
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
     )
     project_budget_over_parser.add_argument(
         "-d",
@@ -428,8 +428,8 @@ def project_budget_over(args: Namespace):
         params += f'&project={args.project}'
     elif args.budget:
         params += f'&budget={args.budget}'
-    if args.year:
-        params += f'&year={args.year}'
+    if args.end:
+        params += f'&end={args.end}'
     if args.detail:
         params += '&detail=True'
     if params:
