@@ -329,11 +329,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="List all user budgets and if their exceeded",
     )
     user_budget_over_parser.add_argument(
-        "-y",
-        "--year",
-        type=int,
-        help="""List user budgets for only the given year
-             (default: current year)""",
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
     )
     user_budget_over_parser.add_argument(
         "-c",
