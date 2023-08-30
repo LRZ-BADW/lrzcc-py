@@ -429,7 +429,7 @@ def project_budget_over(args: Namespace):
     elif args.budget:
         params += f'&budget={args.budget}'
     if args.end:
-        params += f'&end={args.end}'
+        params += f"&end={urllib.parse.quote(args.end)}"
     if args.detail:
         params += '&detail=True'
     if params:
@@ -505,7 +505,7 @@ def user_budget_over(args: Namespace):
     elif args.budget:
         params += f'&budget={args.budget}'
     if args.end:
-        params += f'&end={args.end}'
+        params += f"&end={urllib.parse.quote(args.end)}"
     if args.detail:
         params += '&detail=True'
     if args.combined:
