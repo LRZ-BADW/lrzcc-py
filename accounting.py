@@ -7,10 +7,13 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
 
 
 cmds = ['server-state', 'server-consumption', 'server-cost',
-        'server-action', 'flavor-consumption']
-cmds_with_sub_cmds = ['server-state', 'server-action']
+        'server-action', 'flavor-consumption',
+        'volume-state']
+cmds_with_sub_cmds = ['server-state', 'server-action',
+                      'volume-state']
 dangerous_cmds = {'server-state': ['create', 'modify', 'delete'],
                   'server-action': ['create', 'modify', 'delete'],
+                  'volume-state': ['create', 'modify', 'delete'],
                   }
 
 
@@ -645,6 +648,195 @@ def setup_parsers(main_subparsers: _SubParsersAction):
              "specified by name or ID",
     )
 
+    # volume state parser
+    volume_state_parser: ArgumentParser = main_subparsers.add_parser(
+        "volume-state",
+        help="volume state commands",
+        )
+    parsers['volume-state'] = volume_state_parser
+    volume_state_subparsers: _SubParsersAction = \
+        volume_state_parser.add_subparsers(
+            help="sub-commands",
+            dest="sub_command",
+            )
+
+    # volume state list parser
+    volume_state_list_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "list",
+            help="List volume states",
+            )
+    volume_state_list_filter_group = \
+        volume_state_list_parser.add_mutually_exclusive_group()
+    volume_state_list_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all volume states",
+    )
+    volume_state_list_filter_group.add_argument(
+        # TODO we could validate that this is UUIDv4
+        "-v",
+        "--volume",
+        type=str,
+        help="List volume states for the volume with the given UUID",
+    )
+    volume_state_list_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="List volume states for the user with the given name or ID",
+    )
+    volume_state_list_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="List volume states for the project with the given name or ID",
+    )
+
+    # volume state show parser
+    volume_state_show_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "show",
+            help="Show a volume state",
+            )
+    volume_state_show_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+
+    # volume state modify parser
+    volume_state_modify_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "modify",
+            help="Create a volume state",
+            )
+    volume_state_modify_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-b",
+        "--begin",
+        type=valid_datetime,
+        help='Begin time of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the volume state',
+        )
+    volume_state_modify_parser.add_argument(
+        "-i",
+        "--volume-id",
+        type=str,
+        help='UUID of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-n",
+        "--volume-name",
+        type=str,
+        help='Name of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-S",
+        "--size",
+        type=str,
+        help='Size of the volume in GiB',
+        )
+    volume_state_modify_parser.add_argument(
+        "-s",
+        "--status",
+        type=str,
+        choices=[
+            'ATTACHING',
+            'AVAILABLE',
+            'CREATING',
+            'DELETING',
+            'DETACHING',
+            'ERROR',
+            'ERROR_DELETING',
+            'IN-USE',
+            'MAINTENANCE',
+        ],
+        help='Status of the volume',
+        )
+    volume_state_modify_parser.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
+    # volume state delete parser
+    volume_state_delete_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "delete",
+            help="Delete a volume state",
+            )
+    volume_state_delete_parser.add_argument(
+        "id",
+        type=int,
+        help='ID of the volume state',
+        )
+
+    # volume state create parser
+    volume_state_create_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "create",
+            help="Create a volume state",
+            )
+    volume_state_create_parser.add_argument(
+        "begin",
+        type=valid_datetime,
+        help='Begin time of the volume state',
+        )
+    volume_state_create_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help='End time of the volume state',
+        )
+    volume_state_create_parser.add_argument(
+        "volume_id",
+        type=str,
+        help='UUID of the volume',
+        )
+    volume_state_create_parser.add_argument(
+        "volume_name",
+        type=str,
+        help='Name of the volume',
+        )
+    volume_state_create_parser.add_argument(
+        "size",
+        type=int,
+        help='Size of the volume in GiB',
+        )
+    volume_state_create_parser.add_argument(
+        "status",
+        type=str,
+        choices=[
+            'ATTACHING',
+            'AVAILABLE',
+            'CREATING',
+            'DELETING',
+            'DETACHING',
+            'ERROR',
+            'ERROR_DELETING',
+            'IN-USE',
+            'MAINTENANCE',
+        ],
+        help='Status of the volume',
+        )
+    volume_state_create_parser.add_argument(
+        "user",
+        type=str,
+        help='Name or ID of the user',
+        )
+
     # avoid variable not used warnings
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
@@ -897,7 +1089,7 @@ def flavor_consumption(args: Namespace):
     #     params += "&detail=True"
     if args.all:
         params += "&all=True"
-    elif args.server:
+    elif args.volume:
         params += f"&server={args.server}"
     elif args.user:
         params += f"&user={args.user}"
@@ -907,4 +1099,68 @@ def flavor_consumption(args: Namespace):
         params = '?' + params[1:]
     resp = api_request('get', f'/accounting/flavorconsumption/{params}',
                        None, args)
+    print_response(resp, args)
+
+# Volume-state commands
+
+
+def volume_state_list(args: Namespace):
+    '''list volume states'''
+    params = ""
+    if args.all:
+        params += '?all=True'
+    elif args.volume:
+        params += f'?volume={args.volume}'
+    elif args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
+    resp = api_request('get', f'/accounting/volumestates/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def volume_state_create(args: Namespace):
+    '''create a volume state'''
+    data = {
+        'begin': args.begin,
+        'volume_id': args.volume_id,
+        'volume_name': args.volume_name,
+        'status': args.status,
+        'user': args.user,
+        'size': args.size,
+    }
+    if args.end:
+        data['end'] = args.end
+    resp = api_request('post', '/accounting/volumestates/', data, args)
+    print_response(resp, args)
+
+
+def volume_state_show(args: Namespace):
+    '''show the volume state with a given id'''
+    resp = api_request('get', f'/accounting/volumestates/{args.id}', None,
+                       args)
+    print_response(resp, args)
+
+
+def volume_state_delete(args: Namespace):
+    '''delete the volume state with the given id'''
+    resp = api_request('delete', f'/accounting/volumestates/{args.id}',
+                       None, args)
+    print_response(resp, args)
+
+
+def volume_state_modify(args: Namespace):
+    '''modify the volume state with the given id'''
+    data = generate_modify_data(args,
+                                [('begin', str, 'begin'),
+                                 ('end', str, 'end'),
+                                 ('volume_id', str, 'volume_id'),
+                                 ('volume_name', str, 'volume_name'),
+                                 ('size', int, 'size'),
+                                 ('status', str, 'status'),
+                                 ('user', int, 'user'),
+                                 ])
+    resp = api_request('patch', f'/accounting/volumestates/{args.id}/',
+                       data, args)
     print_response(resp, args)

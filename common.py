@@ -18,6 +18,12 @@ def print_response(resp, args):
     '''print an API response'''
     if not resp.content:
         return
+    if resp.status_code >= 400:
+        content = resp.json()
+        message = ': ' + content['msg'] if 'msg' in content else ''
+        print(f"Error: {resp.status_code} {resp.reason}{message}",
+              file=sys.stderr)
+        sys.exit(1)
     if args.format == 'json':
         output = json.dumps(resp.json())
     elif type(resp.json()) == list:
@@ -44,6 +50,7 @@ def api_request(method, path, data, args):
 
 def valid_datetime(string):
     try:
+        # Example: 2023-08-11T11:25:47.583802+02:00
         datetime.strptime(string, "%Y-%m-%dT%H:%M:%S%z")
         return string
     except ValueError:
