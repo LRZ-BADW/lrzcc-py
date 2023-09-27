@@ -56,6 +56,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="List project budgets for the project with the given name or ID",
     )
+    project_budget_list_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="List project budgets for only the given year",
+    )
 
     # project budget show parser
     project_budget_show_parser: ArgumentParser = \
@@ -131,6 +137,46 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the project budget',
         )
 
+    # project budget over parser
+    project_budget_over_parser: ArgumentParser = \
+        project_budget_subparsers.add_parser(
+            "over",
+            help="Check if cost exceeds project budget",
+        )
+    project_budget_over_filter_group = \
+        project_budget_over_parser.add_mutually_exclusive_group()
+    project_budget_over_filter_group.add_argument(
+        "-b",
+        "--budget",
+        type=int,
+        help="Check if respective cost exceeds the budget with the given ID",
+    )
+    project_budget_over_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Check project budgets for the project with the given name or ID",
+    )
+    project_budget_over_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all project budgets and if their exceeded",
+    )
+    project_budget_over_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
+    )
+    project_budget_over_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Show cost and budget values as well",
+    )
+
     # user budget parser
     user_budget_parser: ArgumentParser = main_subparsers.add_parser(
         "user-budget",
@@ -169,6 +215,12 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=str,
         help="List user budgets for the project with the given name or ID",
     )
+    user_budget_list_parser.add_argument(
+        "-y",
+        "--year",
+        type=int,
+        help="List user budgets for only the given year",
+    )
 
     # user budget show parser
     user_budget_show_parser: ArgumentParser = \
@@ -194,11 +246,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='User name or ID',
     )
     user_budget_create_parser.add_argument(
-        "-y",
-        "--year",
-        type=int,
-        help='Year for the budget (default: current year)',
-        default=datetime.now().year,
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
     )
     user_budget_create_parser.add_argument(
         "-a",
@@ -244,6 +296,58 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='ID of the user budget',
         )
 
+    # user budget over parser
+    user_budget_over_parser: ArgumentParser = \
+        user_budget_subparsers.add_parser(
+            "over",
+            help="Check if cost exceeds user budget",
+        )
+    user_budget_over_filter_group = \
+        user_budget_over_parser.add_mutually_exclusive_group()
+    user_budget_over_filter_group.add_argument(
+        "-b",
+        "--budget",
+        type=int,
+        help="Check if respective cost exceeds the budget with the given ID",
+    )
+    user_budget_over_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Check user budgets for the user with the given name or ID",
+    )
+    user_budget_over_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Check user budgets for the project with the given name or ID",
+    )
+    user_budget_over_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="List all user budgets and if their exceeded",
+    )
+    user_budget_over_parser.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
+    )
+    user_budget_over_parser.add_argument(
+        "-c",
+        "--combined",
+        action="store_true",
+        help="Combine over-budget status of user- and project budgets",
+    )
+    user_budget_over_parser.add_argument(
+        "-d",
+        "--detail",
+        action="store_true",
+        help="Show cost and budget values as well",
+    )
+
     # avoid variable not used warnings
 
     return parsers
@@ -269,6 +373,8 @@ def project_budget_list(args: Namespace):
         params += f'?user={args.user}'
     elif args.project:
         params += f'?project={args.project}'
+    if args.year:
+        params += f'&year={args.year}'
     resp = api_request('get', f'/budgeting/projectbudgets/{params}',
                        None, args)
     print_response(resp, args)
@@ -313,6 +419,26 @@ def project_budget_modify(args: Namespace):
     print_response(resp, args)
 
 
+def project_budget_over(args: Namespace):
+    '''check if cost exceeds project budget'''
+    params = ""
+    if args.all:
+        params += '&all=True'
+    elif args.project:
+        params += f'&project={args.project}'
+    elif args.budget:
+        params += f'&budget={args.budget}'
+    if args.end:
+        params += f"&end={urllib.parse.quote(args.end)}"
+    if args.detail:
+        params += '&detail=True'
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/budgeting/projectbudgets/over/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
 def user_budget_list(args: Namespace):
     '''list user budgets'''
     params = ""
@@ -322,6 +448,8 @@ def user_budget_list(args: Namespace):
         params += f'?user={args.user}'
     elif args.project:
         params += f'?project={args.project}'
+    if args.year:
+        params += f'&year={args.year}'
     resp = api_request('get', f'/budgeting/userbudgets/{params}',
                        None, args)
     print_response(resp, args)
@@ -362,4 +490,28 @@ def user_budget_modify(args: Namespace):
                                  ])
     resp = api_request('patch', f'/budgeting/userbudgets/{args.id}/{params}',
                        data, args)
+    print_response(resp, args)
+
+
+def user_budget_over(args: Namespace):
+    '''check if cost exceeds project budget'''
+    params = ""
+    if args.all:
+        params += '&all=True'
+    elif args.project:
+        params += f'&project={args.project}'
+    elif args.user:
+        params += f'&user={args.user}'
+    elif args.budget:
+        params += f'&budget={args.budget}'
+    if args.end:
+        params += f"&end={urllib.parse.quote(args.end)}"
+    if args.detail:
+        params += '&detail=True'
+    if args.combined:
+        params += '&combined=True'
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/budgeting/userbudgets/over/{params}',
+                       None, args)
     print_response(resp, args)
