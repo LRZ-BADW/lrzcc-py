@@ -837,6 +837,21 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='Name or ID of the user',
         )
 
+    # volume state import parser
+    volume_state_import_parser: ArgumentParser = \
+        volume_state_subparsers.add_parser(
+            "import",
+            help="Import volume states from OpenStack API",
+            )
+    volume_state_import_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="count",
+        default=0,
+        help="Don't print anything, when nothing is imported. " +
+             "Use twice to suppress output even if something is imported.",
+    )
+
     # avoid variable not used warnings
     do_nothing(server_action_list_parser)
     do_nothing(server_action_create_parser)
@@ -1163,4 +1178,20 @@ def volume_state_modify(args: Namespace):
                                  ])
     resp = api_request('patch', f'/accounting/volumestates/{args.id}/',
                        data, args)
+    print_response(resp, args)
+
+def volume_state_import(args: Namespace):
+    '''import volume states from OpenStack API'''
+    params = ""
+    resp = api_request('get', f'/accounting/volumestates/import/{params}',
+                       None, args)
+    resp_json = resp.json()
+    if args.quiet > 1:
+        return
+    if (args.quiet and not
+            (('new_state_count' in resp_json and
+              resp_json['new_state_count']) or
+             ('end_state_count' in resp_json and
+              resp_json['end_state_count']))):
+        return
     print_response(resp, args)
