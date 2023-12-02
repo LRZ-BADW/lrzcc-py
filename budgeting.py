@@ -7,7 +7,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['project-budget', 'user-budget']
+cmds = ['project-budget', 'user-budget', 'budget-over-tree']
 cmds_with_sub_cmds = ['project-budget', 'user-budget']
 dangerous_cmds = {'project-budget': ['delete'],
                   'user-budget': ['delete'],
@@ -348,6 +348,40 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Show cost and budget values as well",
     )
 
+    # project budget parser
+    budget_over_tree_parser: ArgumentParser = main_subparsers.add_parser(
+        "budget-over-tree",
+        help="Get a hierarchical budget cost comparison",
+        )
+    parsers['budget-over-tree'] = budget_over_tree_parser
+    budget_over_tree_filter_group = \
+        budget_over_tree_parser.add_mutually_exclusive_group()
+    budget_over_tree_filter_group.add_argument(
+        "-u",
+        "--user",
+        type=str,
+        help="Get budget over tree for user with the given name or ID",
+    )
+    budget_over_tree_filter_group.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        help="Get budget over tree for the project with the given name or ID",
+    )
+    budget_over_tree_filter_group.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Get budget over tree for entire system",
+    )
+    budget_over_tree_filter_group.add_argument(
+        "-e",
+        "--end",
+        type=valid_datetime,
+        help="""End up to which to calculate the over status, year is inferred
+             from this value (default: current time)""",
+    )
+
     # avoid variable not used warnings
 
     return parsers
@@ -513,5 +547,23 @@ def user_budget_over(args: Namespace):
     if params:
         params = '?' + params[1:]
     resp = api_request('get', f'/budgeting/userbudgets/over/{params}',
+                       None, args)
+    print_response(resp, args)
+
+
+def budget_over_tree(args: Namespace):
+    '''get a hierarchical budget cost comparison'''
+    params = ""
+    if args.user:
+        params += f'?user={args.user}'
+    elif args.project:
+        params += f'?project={args.project}'
+    elif args.all:
+        params += '?all=True'
+    if args.end:
+        params += f"&end={urllib.parse.quote(args.end)}"
+    if params:
+        params = '?' + params[1:]
+    resp = api_request('get', f'/budgeting/budgetovertree/{params}',
                        None, args)
     print_response(resp, args)
