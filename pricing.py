@@ -2,11 +2,12 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor, generate_modify_data)
+                    parse_flavor, generate_modify_data, ask_for_confirmation)
 
 
 cmds = ['flavor-price']
 cmds_with_sub_cmds = ['flavor-price']
+dangerous_cmds = {'flavor-price': ['delete', 'initialize', 'modify']}
 
 
 # TODO we should probably use type annotations everywhere, here I'm just using
@@ -149,6 +150,10 @@ def parse_args(args: Namespace):
     '''do custom command line arguments checks'''
 
     parse_flavor(args)
+
+    if (args.command in dangerous_cmds and args.sub_command
+            and args.sub_command in dangerous_cmds[args.command]):
+        ask_for_confirmation()
 
 
 def flavor_price_list(args: Namespace):
