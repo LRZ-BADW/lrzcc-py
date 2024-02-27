@@ -246,11 +246,11 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help='User name or ID',
     )
     user_budget_create_parser.add_argument(
-        "-e",
-        "--end",
-        type=valid_datetime,
-        help="""End up to which to calculate the over status, year is inferred
-             from this value (default: current time)""",
+        "-y",
+        "--year",
+        type=int,
+        help='Year for the budget (default: current year)',
+        default=datetime.now().year,
     )
     user_budget_create_parser.add_argument(
         "-a",
