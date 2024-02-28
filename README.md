@@ -22,7 +22,7 @@ admin.
 
 ```bash
 . admin-openrc.sh
-source venv/venv/bin/activate
+source venv/bin/activate
 # Check if authentication works
 python main.py user me
 python main.py user import
