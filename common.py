@@ -43,6 +43,8 @@ def api_request(method, path, data, args):
     url = f'{args.url}{path}'
     headers = {'Content-Type': 'application/json',
                'X-Auth-Token': args.token}
+    if args.impersonate and isinstance(args.impersonate, int):
+        headers['X-Impersonate'] = str(args.impersonate)
     resp = requests.request(method, url, headers=headers,
                             data=json.dumps(data))
     return resp
