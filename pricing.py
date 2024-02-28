@@ -2,11 +2,12 @@ from argparse import _SubParsersAction, ArgumentParser, Namespace
 from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor)
+                    parse_flavor, generate_modify_data, ask_for_confirmation)
 
 
 cmds = ['flavor-price']
 cmds_with_sub_cmds = ['flavor-price']
+dangerous_cmds = {'flavor-price': ['delete', 'initialize', 'modify']}
 
 
 # TODO we should probably use type annotations everywhere, here I'm just using
@@ -103,6 +104,32 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=int,
         help='ID of the flavor price',
         )
+    flavor_price_modify_parser.add_argument(
+        "-f",
+        "--flavor",
+        type=str,
+        help="Flavor name or ID",
+    )
+    flavor_price_modify_parser.add_argument(
+        "-u",
+        "--userclass",
+        type=int,
+        choices=[1, 2, 3, 4, 5, 6],
+        help="User class",
+    )
+    flavor_price_modify_parser.add_argument(
+        "-p",
+        "--price",
+        type=float,
+        help="Price of flavor",
+    )
+    flavor_price_modify_parser.add_argument(
+        "-s",
+        "--start-time",
+        type=valid_datetime,
+        help="Datetime at which this price starts in ISO-8601 format, "
+             "so for example 2021-11-09T12:30:00+01:00",
+    )
 
     # flavor price initialize parser
     flavor_price_initialize_parser: ArgumentParser = \
@@ -123,6 +150,10 @@ def parse_args(args: Namespace):
     '''do custom command line arguments checks'''
 
     parse_flavor(args)
+
+    if (args.command in dangerous_cmds and args.sub_command
+            and args.sub_command in dangerous_cmds[args.command]):
+        ask_for_confirmation()
 
 
 def flavor_price_list(args: Namespace):
@@ -151,8 +182,15 @@ def flavor_price_create(args: Namespace):
 
 def flavor_price_modify(args: Namespace):
     '''modify the flavor price with the given id'''
-    # TODO
-    pass
+    data = generate_modify_data(args,
+                                [('flavor', int, 'flavor'),
+                                 ('userclass', int, 'userclass'),
+                                 ('unit_price', float, 'price'),
+                                 ('start_time', str, 'start_time'),
+                                 ])
+    resp = api_request('patch', f'/pricing/flavorprices/{args.id}/',
+                       data, args)
+    print_response(resp, args)
 
 
 def flavor_price_delete(args: Namespace):
