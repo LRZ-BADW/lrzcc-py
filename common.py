@@ -183,8 +183,8 @@ def parse_project(args: Namespace, argname='project', get_name=False):
     parse_entity('project', args, argname, get_name)
 
 
-def parse_user(args: Namespace, get_name=False):
-    parse_entity('user', args, get_name)
+def parse_user(args: Namespace, argname='user', get_name=False):
+    parse_entity('user', args, argname, get_name)
 
 
 def generate_modify_data(args: Namespace, fields):
