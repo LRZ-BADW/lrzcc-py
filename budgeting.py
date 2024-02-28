@@ -348,7 +348,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Show cost and budget values as well",
     )
 
-    # project budget parser
+    # budget over tree parser
     budget_over_tree_parser: ArgumentParser = main_subparsers.add_parser(
         "budget-over-tree",
         help="Get a hierarchical budget cost comparison",
