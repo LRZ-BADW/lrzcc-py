@@ -43,6 +43,8 @@ def api_request(method, path, data, args):
     url = f'{args.url}{path}'
     headers = {'Content-Type': 'application/json',
                'X-Auth-Token': args.token}
+    if args.impersonate and isinstance(args.impersonate, int):
+        headers['X-Impersonate'] = str(args.impersonate)
     resp = requests.request(method, url, headers=headers,
                             data=json.dumps(data))
     return resp
@@ -179,12 +181,12 @@ def parse_flavor_group(args: Namespace, argname='group', get_name=False):
     parse_entity('flavor_group', args, argname, get_name)
 
 
-def parse_project(args: Namespace, get_name=False):
-    parse_entity('project', args, get_name)
+def parse_project(args: Namespace, argname='project', get_name=False):
+    parse_entity('project', args, argname, get_name)
 
 
-def parse_user(args: Namespace, get_name=False):
-    parse_entity('user', args, get_name)
+def parse_user(args: Namespace, argname='user', get_name=False):
+    parse_entity('user', args, argname, get_name)
 
 
 def generate_modify_data(args: Namespace, fields):
