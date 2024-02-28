@@ -7,7 +7,8 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['project-budget', 'user-budget', 'budget-over-tree']
+cmds = ['project-budget', 'user-budget', 'budget-over-tree',
+        'budget-bulk-create']
 cmds_with_sub_cmds = ['project-budget', 'user-budget']
 dangerous_cmds = {'project-budget': ['delete'],
                   'user-budget': ['delete'],
@@ -348,7 +349,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Show cost and budget values as well",
     )
 
-    # project budget parser
+    # budget over tree parser
     budget_over_tree_parser: ArgumentParser = main_subparsers.add_parser(
         "budget-over-tree",
         help="Get a hierarchical budget cost comparison",
@@ -380,6 +381,22 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         type=valid_datetime,
         help="""End up to which to calculate the over status, year is inferred
              from this value (default: current time)""",
+    )
+
+    # budget bulk create parser
+    budget_bulk_create_parser: ArgumentParser = main_subparsers.add_parser(
+        "budget-bulk-create",
+        help="Bulk create user and project budgets",
+        )
+    parsers['budget-bulk-create'] = budget_bulk_create_parser
+    budget_bulk_create_filter_group = \
+        budget_bulk_create_parser.add_mutually_exclusive_group()
+    budget_bulk_create_filter_group.add_argument(
+        "-y",
+        "--year",
+        type=str,
+        default=datetime.now().year,
+        help="Year for the budget (default: current year)",
     )
 
     # avoid variable not used warnings
@@ -566,4 +583,13 @@ def budget_over_tree(args: Namespace):
         params = '?' + params[1:]
     resp = api_request('get', f'/budgeting/budgetovertree/{params}',
                        None, args)
+    print_response(resp, args)
+
+
+def budget_bulk_create(args: Namespace):
+    '''bulk create user and project budgets'''
+    data = {
+        "year": args.year,
+    }
+    resp = api_request('post', '/budgeting/budgetbulkcreate/', data, args)
     print_response(resp, args)
