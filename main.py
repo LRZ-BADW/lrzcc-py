@@ -13,7 +13,7 @@ import accounting
 import quota
 import resources
 import budgeting
-from common import issue_api_token, revoke_api_token
+from common import issue_api_token, revoke_api_token, parse_user
 
 
 THISMODULE = sys.modules[__name__]
@@ -209,6 +209,10 @@ def parse_args():
               "Use -n/--names OR -i/--ids but not both.",
               file=sys.stderr)
         exit(1)
+
+    # parse impersonation user if given
+    if args.impersonate:
+        parse_user(args, 'impersonate')
 
     # get module for specified command
     global module
