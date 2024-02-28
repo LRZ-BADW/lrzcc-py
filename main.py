@@ -113,6 +113,11 @@ def setup_parsers():
                         help="""force parser to treat arguments that could
                              be names or IDs as IDs""",
                         )
+    parser.add_argument('-i',
+                        '--impersonate',
+                        type=str,
+                        help="Username or ID of the user to impersonate",
+                        )
 
     # add main arguments here
     global subparsers
