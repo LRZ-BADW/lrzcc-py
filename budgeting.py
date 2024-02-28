@@ -7,7 +7,8 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     ask_for_confirmation, generate_modify_data)
 
 
-cmds = ['project-budget', 'user-budget', 'budget-over-tree']
+cmds = ['project-budget', 'user-budget', 'budget-over-tree',
+        'budget-bulk-create']
 cmds_with_sub_cmds = ['project-budget', 'user-budget']
 dangerous_cmds = {'project-budget': ['delete'],
                   'user-budget': ['delete'],
