@@ -584,3 +584,12 @@ def budget_over_tree(args: Namespace):
     resp = api_request('get', f'/budgeting/budgetovertree/{params}',
                        None, args)
     print_response(resp, args)
+
+
+def budget_bulk_create(args: Namespace):
+    '''bulk create user and project budgets'''
+    data = {
+        "year": args.year,
+    }
+    resp = api_request('post', '/budgeting/budgetbulkcreate/', data, args)
+    print_response(resp, args)
