@@ -383,6 +383,22 @@ def setup_parsers(main_subparsers: _SubParsersAction):
              from this value (default: current time)""",
     )
 
+    # budget bulk create parser
+    budget_bulk_create_parser: ArgumentParser = main_subparsers.add_parser(
+        "budget-bulk-create",
+        help="Bulk create user and project budgets",
+        )
+    parsers['budget-bulk-create'] = budget_bulk_create_parser
+    budget_bulk_create_filter_group = \
+        budget_bulk_create_parser.add_mutually_exclusive_group()
+    budget_bulk_create_filter_group.add_argument(
+        "-y",
+        "--year",
+        type=str,
+        default=datetime.now().year,
+        help="Year for the budget (default: current year)",
+    )
+
     # avoid variable not used warnings
 
     return parsers
