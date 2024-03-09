@@ -1,8 +1,8 @@
 from argparse import _SubParsersAction, ArgumentParser, Namespace
-from datetime import datetime
 
 from common import (do_nothing, print_response, api_request, valid_datetime,
-                    parse_flavor, generate_modify_data, ask_for_confirmation)
+                    parse_flavor, generate_modify_data, ask_for_confirmation,
+                    now_str)
 
 
 cmds = ['flavor-price']
@@ -78,7 +78,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         help="Datetime at which this price starts in ISO-8601 format, "
              "so for example 2021-11-09T12:30:00+01:00 "
              "(default: now)",
-        default=datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"),
+        default=now_str(),
     )
 
     # flavor price delete parser
