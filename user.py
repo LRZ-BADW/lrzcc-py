@@ -225,7 +225,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-u",
         "--user-class",
         type=int,
-        choices=[1, 2, 3, 4, 5, 6],
+        choices=[0, 1, 2, 3, 4, 5, 6],
         help="List projects with the specified user class",
     )
 
@@ -256,7 +256,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-u",
         "--user-class",
         type=int,
-        choices=[1, 2, 3, 4, 5, 6],
+        choices=[0, 1, 2, 3, 4, 5, 6],
         default=1,
         help="User class of the project",
     )
@@ -294,7 +294,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-u",
         "--user-class",
         type=int,
-        choices=[1, 2, 3, 4, 5, 6],
+        choices=[0, 1, 2, 3, 4, 5, 6],
         help="New user class of the project",
     )
 
