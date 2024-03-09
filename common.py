@@ -3,6 +3,7 @@ import requests
 from http import HTTPStatus
 import json
 from datetime import datetime
+from pytz import timezone
 from argparse import ArgumentError, Namespace
 import sys
 # from pydoc import locate
@@ -12,6 +13,12 @@ def do_nothing(variable):
     '''just do nothing, this can be used to avoid wrongful linter warnings
     about unused variables'''
     pass
+
+
+def now_str():
+    tz = timezone("Europe/Berlin")
+    format = "%Y-%m-%dT%H:%M:%S%z"
+    return datetime.now(tz).strftime(format)
 
 
 def print_response(resp, args):
