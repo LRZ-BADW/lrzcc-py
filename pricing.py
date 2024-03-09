@@ -61,7 +61,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
     flavor_price_create_parser.add_argument(
         "userclass",
         type=int,
-        choices=[1, 2, 3, 4, 5, 6],
+        choices=[0, 1, 2, 3, 4, 5, 6],
         help="User class",
     )
     flavor_price_create_parser.add_argument(
@@ -114,7 +114,7 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         "-u",
         "--userclass",
         type=int,
-        choices=[1, 2, 3, 4, 5, 6],
+        choices=[0, 1, 2, 3, 4, 5, 6],
         help="User class",
     )
     flavor_price_modify_parser.add_argument(
