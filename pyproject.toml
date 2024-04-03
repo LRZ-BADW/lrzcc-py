@@ -1,0 +1,41 @@
+[project]
+name = "lrzcc"
+version = "0.7.0"
+dependencies = [
+    "argcomplete==3.1.1",
+    "certifi==2023.5.7",
+    "charset-normalizer==3.2.0",
+    "idna==3.4",
+    "requests==2.31.0",
+    "tabulate==0.9.0",
+    "urllib3==2.0.3",
+]
+requires-python = ">=3.8"
+authors = [
+    {name = "Sandro-Alessio Gierens", email = "sandro@gierens.de"},
+]
+maintainers = [
+    {name = "Sandro-Alessio Gierens", email = "sandro@gierens.de"},
+    {name = "Niels Fallenbeck", email = "niels@fallenbeck.com"},
+]
+description = "Command line client for LRZ specific features of the Compute Cloud (cc.lrz.de)."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["lrz", "cloud", "compute cloud", "api client", "cli"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python"
+]
+
+[project.urls]
+Homepage = "https://github.com/LRZ-BADW/lrzcc/"
+Documentation = "https://doku.lrz.de/compute-cloud-10333232.html"
+Repository = "https://github.com/LRZ-BADW/lrzcc.git"
+"Bug Tracker" = "https://github.com/LRZ-BADW/lrzcc/issues"
+Changelog = "https://github.com/LRZ-BADW/lrzcc/blob/master/CHANGELOG.md"
+
+[project.scripts]
+lrzcc = "main:main"
