@@ -12,11 +12,11 @@ dependencies = [
 ]
 requires-python = ">=3.8"
 authors = [
-    {name = "Sandro-Alessio Gierens", email = "sandro@gierens.de"},
+    {name = "Sandro-Alessio Gierens", email = "gierens@lrz.de"},
 ]
 maintainers = [
-    {name = "Sandro-Alessio Gierens", email = "sandro@gierens.de"},
-    {name = "Niels Fallenbeck", email = "niels@fallenbeck.com"},
+    {name = "Sandro-Alessio Gierens", email = "gierens@lrz.de"},
+    {name = "Niels Fallenbeck", email = "fallenbeck@lrz.de"},
 ]
 description = "Command line client for LRZ specific features of the Compute Cloud (cc.lrz.de)."
 readme = "README.md"
