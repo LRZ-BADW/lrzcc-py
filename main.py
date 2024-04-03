@@ -18,7 +18,7 @@ from common import issue_api_token, revoke_api_token, parse_user
 
 THISMODULE = sys.modules[__name__]
 DESCRIPTION = 'client program for the LRZ Compute Cloud budgeting system'
-API_URL = 'http://localhost:8000/api'
+API_URL = 'https://cc.lrz.de:1337/api'
 
 
 parser = None
