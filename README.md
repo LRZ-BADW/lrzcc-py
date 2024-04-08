@@ -40,23 +40,15 @@ master user.
 lrzcc flavor-price list
 ```
 
-#### Calculate Own Consumption
+#### Calculate Own Consumption and Cost
 ```bash
 lrzcc server-consumption
-```
-
-#### Calculate Own Cost
-```bash
 lrzcc server-cost
 ```
 
-#### View Own User Budget
+#### View User and Project Budget
 ```bash
 lrzcc user-budget list
-```
-
-#### View Own Project Budget
-```bash
 lrzcc project-budget list
 ```
 
@@ -76,17 +68,13 @@ the API.
 
 ### Master User Workflows
 
-#### List Own Project
+#### List Own Project and Users
 ```bash
 lrzcc project list
-```
-
-#### List Users of Own Project
-```bash
 lrzcc user list -p <project_id/name>
 ```
 
-#### List User Budgets of Own Project
+#### List Budgets of Own Project
 ```bash
 lrzcc user-budget list -p <project_id/name>
 ```
