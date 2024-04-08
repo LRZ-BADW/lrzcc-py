@@ -102,6 +102,6 @@ Note: you cannot set a budget below the already acrued costs or modify the
 budget of a past year.
 
 ## Warning
-Don't rely on the fact that this is written in Python, because this is
+Don't rely on the fact that this is written in Python at the moment, this is
 going to be replaced by a corresponding Rust library + CLI application in
 the not so distant future.
