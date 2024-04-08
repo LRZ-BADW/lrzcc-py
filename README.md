@@ -105,6 +105,14 @@ lrzcc -f json budget-over-tree -p <project_id/name>
 Note: the `-f json` tells the tool to simply output the JSON response from
 the API.
 
+#### Modify Budgets
+```bash
+lrzcc user-budget modify <user_budget_id> -a <amount>
+lrzcc project-budget modify <project_budget_id> -a <amount>
+```
+Note: you cannot set a budget below the already acrued costs or modify the
+budget of a past year.
+
 ## Warning
 Don't rely on the fact that this is written in Python, because this is
 going to be replaced by a corresponding Rust library + CLI application in
