@@ -6,7 +6,7 @@ from common import (do_nothing, print_response, api_request, valid_datetime,
                     parse_flavor, parse_flavor_group, generate_modify_data,
                     parse_user, parse_project)
 
-cmds = ['flavor', 'flavor-group']
+cmds = ['flavor', 'flavor-group', 'usage']
 cmds_with_sub_cmds = ['flavor', 'flavor-group']
 
 
@@ -304,6 +304,13 @@ def setup_parsers(main_subparsers: _SubParsersAction):
         action="store_true",
         help="Aggregate the flavor usage for all filtered users",
     )
+
+    # usage parser
+    usage_parser: ArgumentParser = main_subparsers.add_parser(
+        "usage",
+        help="Show usage of the entire cloud",
+        )
+    parsers['usage'] = usage_parser
 
     # avoid variable not used warnings
     do_nothing(flavor_group_initialize_parser)
