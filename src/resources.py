@@ -475,3 +475,9 @@ def flavor_group_usage(args: Namespace):
     resp = api_request('get', f'/resources/flavorgroups/usage/{params}', None,
                        args)
     print_response(resp, args)
+
+
+def usage(args: Namespace):
+    '''show usage of the entire cloud'''
+    resp = api_request('get', '/resources/usage/', None, args)
+    print_response(resp, args)
