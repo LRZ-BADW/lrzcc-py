@@ -35,6 +35,13 @@ lrzcc user me
 Note: role 1 indicates that you are a normal user, role 2 means you are a
 master user.
 
+#### Display Cloud Usage
+```bash
+lrzcc -f json usage
+```
+Note: the `-f json` tells the tool to simply output the JSON response from
+the API.
+
 #### List Flavor Prices
 ```bash
 lrzcc flavor-price list
