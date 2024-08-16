@@ -1,4 +1,4 @@
-# lrzcc-py
+# lrzcc-py \[deprecated\]
 
 **WARNING**: This Python-based CLI client has been deprecated in favor of the
 new Rust-based CLI client [lrzcc](https://github.com/LRZ-BADW/lrzcc).
