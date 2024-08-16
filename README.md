@@ -1,4 +1,7 @@
-# README
+# lrzcc-py
+
+**WARNING**: This Python-based CLI client has been deprecated in favor of the
+new Rust-based CLI client [lrzcc](https://github.com/LRZ-BADW/lrzcc).
 
 Command line tool for LRZ-specific features of the LRZ Compute Cloud
 [https://cc.lrz.de](https://cc.lrz.de), first and foremost the budgeting system.
